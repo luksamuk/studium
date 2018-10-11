@@ -6,6 +6,24 @@
 
 Coming soon.
 
+* Implementation
+
+** Vector arithmetic
+Based upon the book /"Real Time Collision Detection"/, by Christer Ericson.
+
 * License
 
-GNU Lesser General Public License v3.0.
+This software is distributed under the GNU Lesser General Public License v3.0,
+except for third-party software described below.
+
+** Third-party
+
+- =stb_image.h=
+  Built by Sean T. Barrett. License is Public Domain.
+
+- =glad.h=
+  OpenGL loader interface, created using [[https://github.com/Dav1dde/glad][glad]]. License is Public Domain.
+
+- =khrplatform.h=
+  Khronos Group platform-specific types and definitions, fetched by [[https://github.com/Dav1dde/glad][glad]].
+  License is MIT.

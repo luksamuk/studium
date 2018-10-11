@@ -5,7 +5,7 @@ project(studium)
 file(GLOB studium_SRC
   "src/*.c")
 
-set(CMAKE_BUILD_TYPE Debug)
+set(CMAKE_BUILD_TYPE RelWithDebugInfo)
 
 # Static GLFW
 set(GLFW_BUILD_DOCS OFF CACHE BOOL "" FORCE)

@@ -1,0 +1,22 @@
+#+TITLE:  Studium Engine: Changelog
+#+AUTHOR: Lucas Vieira
+#+EMAIL:  lucasvieira@lisp.com.br
+
+All notable changes on this project will be documented on this file.
+
+The format is based on [[https://keepachangelog.com/en/1.0.0/][Keep a Changelog]], and this project adheres to
+[[https://keepachangelog.com/en/1.0.0/][Semantic Versioning]].
+
+It is also worth noting that this changelog is written in Org, due to the
+author's sympathy for the format from an organization standpoint.
+
+* Unreleased
+** Added
+- Own vector arithmetic library;
+- Basic and agnostic interface for handling textures;
+- =stb_image.h= for minimal texture support;
+- Smart macros for debugging;
+- Basic display and renderer support and initialization;
+- Basic CMake project and static compilation of external resources;
+- Permissive and free license;
+- Automatically-generated OpenGL loader using =glad=.
