@@ -1,0 +1,9 @@
+#+TITLE: Studium Engine
+
+* Introduction
+
+Coming soon.
+
+* License
+
+GNU Lesser General Public License v3.0.
