@@ -1,4 +1,6 @@
-#+TITLE: Studium Engine
+#+TITLE:  Studium Engine
+#+AUTHOR: Lucas Vieira
+#+EMAIL:  lucasvieira@lisp.com.br
 
 * Introduction
 
