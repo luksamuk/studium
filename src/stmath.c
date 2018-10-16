@@ -204,7 +204,8 @@ st_mat3_scalar_mult(float c, const st_mat3* a)
     return mult;
 }
 
-float st_mat3_det(const st_mat3* a)
+float
+st_mat3_det(const st_mat3* a)
 {
     // This implementation could be different.
     // Revisit in case of bad performance!
@@ -219,7 +220,8 @@ float st_mat3_det(const st_mat3* a)
 /*                           Determinant Predicates                           */
 /* ========================================================================== */
 
-float st_orient2d(st_vec2 a, st_vec2 b, st_vec2 c)
+float
+st_orient2d(st_vec2 a, st_vec2 b, st_vec2 c)
 {
     st_mat3 buffer;
     buffer.a11 = a.x; buffer.a12 = a.y; buffer.a13 = 1.0f;
