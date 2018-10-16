@@ -12,7 +12,8 @@ author's sympathy for the format from an organization standpoint.
 
 * Unreleased
 ** Added
-- Own vector arithmetic library;
+- Matrix arithmetic for 3x3 matrices;
+- Vector arithmetic for 2D and 3D vectors;
 - Basic and agnostic interface for handling textures;
 - =stb_image.h= for minimal texture support;
 - Smart macros for debugging;

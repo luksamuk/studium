@@ -20,10 +20,13 @@ add_library(glad STATIC
 
 # libstudium
 add_library(studium SHARED ${studium_SRC})
+set_property(TARGET studium PROPERTY C_STANDARD 11)
 
 # Test binary
 add_executable(studium-test
   src/main.c)
+set_property(TARGET studium-test
+  PROPERTY C_STANDARD 11)
 
 target_link_libraries(studium-test
   studium

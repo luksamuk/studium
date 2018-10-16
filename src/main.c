@@ -30,6 +30,6 @@ main(void)
     
     st_window_game_loop(&window, game_loop);
     
-    st_cleanup();
+    st_log_exec_debug(st_cleanup());
     return 0;
 }

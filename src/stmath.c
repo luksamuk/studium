@@ -1,4 +1,6 @@
 #include "studium/stmath.h"
+#include "studium/core.h"
+#include <stddef.h>
 
 /* ========================================================================== */
 /*                                  st_vec2                                   */
@@ -121,4 +123,107 @@ st_vec3_cross(st_vec3 a, st_vec3 b)
     cross.y = - ((a.x * b.z) - (a.z * b.x));
     cross.z =    (a.x * b.y) - (a.y * b.x);
     return cross;
+}
+
+
+/* ========================================================================== */
+/*                                  st_mat3                                   */
+/* ========================================================================== */
+
+
+st_mat3
+st_mat3_identity()
+{
+    st_mat3 id = {1.0f, 0.0f, 0.0f,
+		  0.0f, 1.0f, 0.0f,
+		  0.0f, 0.0f, 1.0f};
+    return id;
+}
+
+st_mat3
+st_mat3_transpose(const st_mat3* a)
+{
+    assert(a);
+    st_mat3 t = {a->a11, a->a21, a->a31,
+		 a->a12, a->a22, a->a32,
+		 a->a13, a->a23, a->a33};
+    return t;
+}
+
+st_mat3
+st_mat3_sum(const st_mat3* a, const st_mat3* b)
+{
+    assert(a);
+    assert(b);
+    st_mat3 sum;
+    
+    {
+	size_t i;
+	for(i = 0; i < 9; i++)
+	    sum.A[i] = a->A[i] + b->A[i];
+    }
+
+    return sum;
+}
+
+st_mat3
+st_mat3_sub(const st_mat3* a, const st_mat3* b)
+{
+    assert(a);
+    assert(b);
+    st_mat3 sub;
+    
+    {
+	size_t i;
+	for(i = 0; i < 9; i++)
+	    sub.A[i] = a->A[i] - b->A[i];
+    }
+
+    return sub;
+}
+
+/* st_mat3 */
+/* st_mat3_mult(const st_mat3* a, const st_mat3* b) */
+/* { */
+/*     // cij = sum [k=1 to n] (aik * bkj) */
+/* } */
+
+
+st_mat3
+st_mat3_scalar_mult(float c, const st_mat3* a)
+{
+    assert(a);
+    st_mat3 mult;
+
+    {
+	size_t i;
+	for(i = 0; i < 9; i++)
+	    mult.A[i] = c * a->A[i];
+    }
+
+    return mult;
+}
+
+float st_mat3_det(const st_mat3* a)
+{
+    // This implementation could be different.
+    // Revisit in case of bad performance!
+    return a->a11 * ((a->a22 * a->a33) - (a->a23 * a->a32))
+	+ a->a12 * ((a->a23 * a->a31) - (a->a21 * a->a33))
+	+ a->a13 * ((a->a21 * a->a32) - (a->a22 * a->a31));
+}
+
+
+
+/* ========================================================================== */
+/*                           Determinant Predicates                           */
+/* ========================================================================== */
+
+float st_orient2d(st_vec2 a, st_vec2 b, st_vec2 c)
+{
+    st_mat3 buffer;
+    buffer.a11 = a.x; buffer.a12 = a.y; buffer.a13 = 1.0f;
+    buffer.a21 = b.x; buffer.a22 = b.y; buffer.a23 = 1.0f;
+    buffer.a31 = c.x; buffer.a32 = c.y; buffer.a33 = 1.0f;
+    return st_mat3_det(&buffer);
 }
