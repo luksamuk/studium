@@ -4,8 +4,59 @@
 #include <stddef.h>
 
 /* ========================================================================== */
+/*                     General helper macros and functions                    */
+/* ========================================================================== */
+
+#define st_empty(cast) (cast){   0  }
+#define st_unary(cast) (cast){ 1.0f }
+
+static void
+__st_generic_vec_print(const float* V, size_t sz)
+{
+    size_t i;
+    for(i = 0; i < sz; i++) {
+	printf("%04.4f%s",
+	       V[i],
+	       (i != sz - 1) ? " " : "");
+    }
+}
+
+static void
+__st_generic_mat_print(const float* A, size_t order)
+{
+    size_t i;
+    for(i = 0; i < order * order; i++) {
+	printf("%s%04.4f%c",
+	       (i % order) == 0 ? "\t" : "",
+	       A[i],
+	       ((i + 1) % order) == 0 ? '\n' : '\t');
+    }
+}
+
+/* ========================================================================== */
 /*                                  st_vec2                                   */
 /* ========================================================================== */
+
+st_vec2
+st_vec2_zero()
+{
+    return st_empty(st_vec2);
+}
+
+st_vec2
+st_vec2_one()
+{
+    return st_unary(st_vec2);
+}
+
+st_vec2
+st_vec2_new(const float values[static 2])
+{
+    st_vec2 new;
+    new.x = values[0];
+    new.y = values[1];
+    return new;
+}
 
 st_vec2
 st_vec2_sum(st_vec2 a, st_vec2 b)
@@ -57,10 +108,43 @@ st_vec2_dot(st_vec2 a, st_vec2 b)
     return (a.x * b.x) + (a.y * b.y);
 }
 
+void
+st_vec2_print(const st_vec2* a)
+{
+    if(!a) {
+	st_log_err("attempt on printing NULL reference to vector");
+	return;
+    }
+    fputs("vec2 { ", stdout);
+    __st_generic_vec_print((const float*)a, 2);
+    puts(" }");
+}
 
 /* ========================================================================== */
 /*                                  st_vec3                                   */
 /* ========================================================================== */
+
+st_vec3
+st_vec3_zero()
+{
+    return st_empty(st_vec3);
+}
+
+st_vec3
+st_vec3_one()
+{
+    return st_unary(st_vec3);
+}
+
+st_vec3
+st_vec3_new(const float values[static 3])
+{
+    st_vec3 new;
+    new.x = values[0];
+    new.y = values[1];
+    new.z = values[2];
+    return new;
+}
 
 st_vec3
 st_vec3_sum(st_vec3 a, st_vec3 b)
@@ -126,24 +210,16 @@ st_vec3_cross(st_vec3 a, st_vec3 b)
     return cross;
 }
 
-
-
-/* ========================================================================== */
-/*                     Helper matrix functions and macros                     */
-/* ========================================================================== */
-
-#define st_empty(cast) (cast){ 0 }
-
-static void
-__st_generic_mat_print(const float* A, size_t order)
+void
+st_vec3_print(const st_vec3* a)
 {
-    size_t i;
-    for(i = 0; i < order * order; i++) {
-	printf("%s%04.4f%c",
-	       (i % order) == 0 ? "\t" : "",
-	       A[i],
-	       ((i + 1) % order) == 0 ? '\n' : '\t');
+    if(!a) {
+	st_log_err("attempt on printing NULL reference to vector");
+	return;
     }
+    fputs("vec3 { ", stdout);
+    __st_generic_vec_print((const float*)a, 3);
+    puts(" }");
 }
 
 
@@ -281,6 +357,25 @@ st_mat4_identity()
     return id;
 }
 
+
+st_mat4
+st_mat4_scalar_mult(float c, const st_mat4* a)
+{
+     if(!a) {
+	st_log_err("arithmetic operation on NULL reference to matrix");
+	return st_empty(st_mat4);
+    }
+    
+    st_mat4 mult;
+
+    {
+	size_t i;
+	for(i = 0; i < 16; i++)
+	    mult.A[i] = c * a->A[i];
+    }
+
+    return mult;
+}
 
 void
 st_mat4_print(const st_mat4* a)

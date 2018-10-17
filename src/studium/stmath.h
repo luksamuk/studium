@@ -9,6 +9,9 @@ typedef struct {
 } st_vec2;
 
 // Vector arithmetic
+st_vec2 st_vec2_zero();
+st_vec2 st_vec2_one();
+st_vec2 st_vec2_new(const float values[static 2]);
 st_vec2 st_vec2_sum(st_vec2 a, st_vec2 b);
 st_vec2 st_vec2_sub(st_vec2 a, st_vec2 b);
 st_vec2 st_vec2_neg(st_vec2 a);
@@ -18,6 +21,8 @@ float   st_vec2_sqdist(st_vec2 a, st_vec2 b);
 float   st_vec2_sqlen(st_vec2 a);
 float   st_vec2_dot(st_vec2 a, st_vec2 b);
 
+// Debugging
+void   st_vec2_print(const st_vec2* a);
 
 
 /* 3D Vector */
@@ -26,6 +31,9 @@ typedef struct {
 } st_vec3;
 
 // Vector arithmetic
+st_vec3 st_vec3_zero();
+st_vec3 st_vec3_one();
+st_vec3 st_vec3_new(const float values[static 3]);
 st_vec3 st_vec3_sum(st_vec3 a, st_vec3 b);
 st_vec3 st_vec3_sub(st_vec3 a, st_vec3 b);
 st_vec3 st_vec3_neg(st_vec3 a);
@@ -36,6 +44,19 @@ float   st_vec3_sqdist(st_vec3 a, st_vec3 b);
 float   st_vec3_sqlen(st_vec3 a);
 float   st_vec3_dot(st_vec3 a, st_vec3 b);
 
+// Debugging
+void   st_vec3_print(const st_vec3* a);
+
+
+/* 4D Vector */
+typedef struct {
+    float x, y, z, w;
+} st_vec4;
+
+// Vector arithmetic
+//st_vec4 st_vec4_zero();
+
+// Scalar operations
 
 
 /* 2D Matrix */
@@ -99,6 +120,7 @@ typedef struct {
 st_mat4 st_mat4_identity();
 
 // Scalar operations
+st_mat4 st_mat4_scalar_mult(float c, const st_mat4* a);
 // Debugging
 void    st_mat4_print(const st_mat4* a);
 
