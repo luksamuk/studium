@@ -77,6 +77,9 @@ st_mat3 st_mat3_sub(const st_mat3* a, const st_mat3* b);
 st_mat3 st_mat3_scalar_mult(float c, const st_mat3* a);
 float   st_mat3_det(const st_mat3* a);
 
+// Debugging
+void    st_mat3_print(const st_mat3* a);
+
 
 
 /* 4D Matrix */
@@ -92,8 +95,12 @@ typedef struct {
     };
 } st_mat4;
 
-// TODO
+// Matrix operations
+st_mat4 st_mat4_identity();
 
+// Scalar operations
+// Debugging
+void    st_mat4_print(const st_mat4* a);
 
 
 /* Determinant predicates */

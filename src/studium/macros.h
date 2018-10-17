@@ -18,7 +18,8 @@
 #define st_log_debug(msg) __st_log(DEBUG, msg);
 #define st_log_warn(msg)  __st_log(WARN,  msg);
 #define st_log_crit(msg)  __st_log(CRIT,  msg);
-
+#define st_log_err(msg) \
+    printf(" [ ERR ] %s: %s\n", __func__, msg);
 
 // The following macros should be used for overall
 // debugging. Type in a specific thunk you wish to

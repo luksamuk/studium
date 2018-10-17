@@ -1,5 +1,6 @@
 #include "studium/stmath.h"
 #include "studium/core.h"
+#include "studium/macros.h"
 #include <stddef.h>
 
 /* ========================================================================== */
@@ -126,10 +127,30 @@ st_vec3_cross(st_vec3 a, st_vec3 b)
 }
 
 
+
+/* ========================================================================== */
+/*                     Helper matrix functions and macros                     */
+/* ========================================================================== */
+
+#define st_empty(cast) (cast){ 0 }
+
+static void
+__st_generic_mat_print(const float* A, size_t order)
+{
+    size_t i;
+    for(i = 0; i < order * order; i++) {
+	printf("%s%04.4f%c",
+	       (i % order) == 0 ? "\t" : "",
+	       A[i],
+	       ((i + 1) % order) == 0 ? '\n' : '\t');
+    }
+}
+
+
+
 /* ========================================================================== */
 /*                                  st_mat3                                   */
 /* ========================================================================== */
-
 
 st_mat3
 st_mat3_identity()
@@ -143,7 +164,10 @@ st_mat3_identity()
 st_mat3
 st_mat3_transpose(const st_mat3* a)
 {
-    assert(a);
+    if(!a) {
+	st_log_err("matrix operation on NULL reference to matrix");
+	return st_empty(st_mat3);
+    }
     st_mat3 t = {a->a11, a->a21, a->a31,
 		 a->a12, a->a22, a->a32,
 		 a->a13, a->a23, a->a33};
@@ -153,8 +177,11 @@ st_mat3_transpose(const st_mat3* a)
 st_mat3
 st_mat3_sum(const st_mat3* a, const st_mat3* b)
 {
-    assert(a);
-    assert(b);
+    if(!a || !b) {
+	st_log_err("matrix operation on one or two NULL references to matrices");
+	return st_empty(st_mat3);
+    }
+    
     st_mat3 sum;
     
     {
@@ -169,8 +196,11 @@ st_mat3_sum(const st_mat3* a, const st_mat3* b)
 st_mat3
 st_mat3_sub(const st_mat3* a, const st_mat3* b)
 {
-    assert(a);
-    assert(b);
+    if(!a || !b) {
+	st_log_err("matrix operation on one or two NULL references to matrices");
+	return st_empty(st_mat3);
+    }
+    
     st_mat3 sub;
     
     {
@@ -192,7 +222,11 @@ st_mat3_sub(const st_mat3* a, const st_mat3* b)
 st_mat3
 st_mat3_scalar_mult(float c, const st_mat3* a)
 {
-    assert(a);
+    if(!a) {
+	st_log_err("arithmetic operation on NULL reference to matrix");
+	return st_empty(st_mat3);
+    }
+    
     st_mat3 mult;
 
     {
@@ -207,6 +241,10 @@ st_mat3_scalar_mult(float c, const st_mat3* a)
 float
 st_mat3_det(const st_mat3* a)
 {
+    if(!a) {
+	st_log_err("matrix operation on NULL reference to matrix");
+	return 0.0f;
+    }
     // This implementation could be different.
     // Revisit in case of bad performance!
     return a->a11 * ((a->a22 * a->a33) - (a->a23 * a->a32))
@@ -215,6 +253,46 @@ st_mat3_det(const st_mat3* a)
 }
 
 
+void
+st_mat3_print(const st_mat3* a)
+{
+    if(!a) {
+	st_log_err("attempt on printing NULL reference to matrix");
+	return;
+    }
+    puts("mat3 {");
+    __st_generic_mat_print(a->A, 3);
+    puts("}");
+}
+
+
+
+/* ========================================================================== */
+/*                                  st_mat4                                   */
+/* ========================================================================== */
+
+st_mat4
+st_mat4_identity()
+{
+    st_mat4 id = {1.0f, 0.0f, 0.0f, 0.0f,
+		  0.0f, 1.0f, 0.0f, 0.0f,
+		  0.0f, 0.0f, 1.0f, 0.0f,
+		  0.0f, 0.0f, 0.0f, 1.0f};
+    return id;
+}
+
+
+void
+st_mat4_print(const st_mat4* a)
+{
+    if(!a) {
+	st_log_err("attempt on printing NULL reference to matrix");
+	return;
+    }
+    puts("mat4 {");
+    __st_generic_mat_print(a->A, 4);
+    puts("}");
+}
 
 /* ========================================================================== */
 /*                           Determinant Predicates                           */
