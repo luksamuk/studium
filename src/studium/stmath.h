@@ -14,6 +14,7 @@ st_vec2 st_vec2_one();
 st_vec2 st_vec2_new(const float values[static 2]);
 st_vec2 st_vec2_sum(st_vec2 a, st_vec2 b);
 st_vec2 st_vec2_sub(st_vec2 a, st_vec2 b);
+st_vec2 st_vec2_scalar_mult(float c, st_vec2 a);
 st_vec2 st_vec2_neg(st_vec2 a);
 
 // Scalar operations
@@ -36,6 +37,7 @@ st_vec3 st_vec3_one();
 st_vec3 st_vec3_new(const float values[static 3]);
 st_vec3 st_vec3_sum(st_vec3 a, st_vec3 b);
 st_vec3 st_vec3_sub(st_vec3 a, st_vec3 b);
+st_vec3 st_vec3_scalar_mult(float c, st_vec3 a);
 st_vec3 st_vec3_neg(st_vec3 a);
 st_vec3 st_vec3_cross(st_vec3 a, st_vec3 b);
 
@@ -59,6 +61,7 @@ st_vec4 st_vec4_one();
 st_vec4 st_vec4_new(const float values[static 4]);
 st_vec4 st_vec4_sum(st_vec4 a, st_vec4 b);
 st_vec4 st_vec4_sub(st_vec4 a, st_vec4 b);
+st_vec4 st_vec4_scalar_mult(float c, st_vec4 a);
 st_vec4 st_vec4_neg(st_vec4 a);
 
 // Scalar operations
@@ -81,7 +84,16 @@ typedef struct {
     };
 } st_mat2;
 
-// TODO
+// Matrix operations
+/* st_mat2 st_mat2_identity(); */
+/* st_mat2 st_mat2_transpose(const st_mat2* a); */
+/* st_mat2 st_mat2_sum(const st_mat2* a, const st_mat2* b); */
+/* st_mat2 st_mat2_sub(const st_mat2* a, const st_mat2* b); */
+/* st_mat2 st_mat2_mult(const st_mat2* a, const st_mat2* b); */
+
+// Scalar operations
+/* st_mat2 st_mat2_scalar_mult(float c, const st_mat2* a); */
+/* float   st_mat2_det(const st_mat2* a); */
 
 
 
@@ -102,7 +114,7 @@ st_mat3 st_mat3_identity();
 st_mat3 st_mat3_transpose(const st_mat3* a);
 st_mat3 st_mat3_sum(const st_mat3* a, const st_mat3* b);
 st_mat3 st_mat3_sub(const st_mat3* a, const st_mat3* b);
-/* st_mat3 st_mat3_mult(const st_mat3* a, const st_mat3* b); */ // todo
+/* st_mat3 st_mat3_mult(const st_mat3* a, const st_mat3* b); */
 
 // Scalar operations
 st_mat3 st_mat3_scalar_mult(float c, const st_mat3* a);
@@ -128,9 +140,15 @@ typedef struct {
 
 // Matrix operations
 st_mat4 st_mat4_identity();
+/* st_mat4 st_mat4_transpose(const st_mat4* a); */
+/* st_mat4 st_mat4_sum(const st_mat4* a, const st_mat4* b); */
+/* st_mat4 st_mat4_sub(const st_mat4* a, const st_mat4* b); */
+/* st_mat4 st_mat4_mult(const st_mat4* a, const st_mat4* b); */
 
 // Scalar operations
 st_mat4 st_mat4_scalar_mult(float c, const st_mat4* a);
+/* float   st_mat4_det(const st_mat4* a); */
+
 // Debugging
 void    st_mat4_print(const st_mat4* a);
 

@@ -49,6 +49,14 @@ __st_generic_vec_neg(float* dest, const float* a, size_t sz)
 }
 
 static void
+__st_generic_vec_mult(float* dest, float c, const float* a, size_t sz)
+{
+    size_t i;
+    for(i = 0; i < sz; i++)
+	dest[i] = c * a[i];
+}
+
+static void
 __st_generic_mat_print(const float* A, size_t order)
 {
     size_t i;
@@ -98,6 +106,14 @@ st_vec2_sub(st_vec2 a, st_vec2 b)
     st_vec2 sub;
     __st_generic_vec_sub((float*)&sub, (const float*)&a, (const float*)&b, 2);
     return sub;
+}
+
+st_vec2
+st_vec2_scalar_mult(float c, st_vec2 a)
+{
+    st_vec2 result;
+    __st_generic_vec_mult((float*)&result, c, (const float*)&a, 2);
+    return result;
 }
 
 st_vec2
@@ -183,6 +199,13 @@ st_vec3_sub(st_vec3 a, st_vec3 b)
     return sub;
 }
 
+st_vec3
+st_vec3_scalar_mult(float c, st_vec3 a)
+{
+    st_vec3 result;
+    __st_generic_vec_mult((float*)&result, c, (const float*)&a, 3);
+    return result;
+}
 
 st_vec3
 st_vec3_neg(st_vec3 a)
@@ -280,6 +303,14 @@ st_vec4_sub(st_vec4 a, st_vec4 b)
 }
 
 st_vec4
+st_vec4_scalar_mult(float c, st_vec4 a)
+{
+    st_vec4 result;
+    __st_generic_vec_mult((float*)&result, c, (const float*)&a, 4);
+    return result;
+}
+
+st_vec4
 st_vec4_neg(st_vec4 a)
 {
     st_vec4 neg;
@@ -326,6 +357,12 @@ st_vec4_print(const st_vec4* a)
 
 
 /* ========================================================================== */
+/*                                  st_mat2                                   */
+/* ========================================================================== */
+
+
+
+/* ========================================================================== */
 /*                                  st_mat3                                   */
 /* ========================================================================== */
 
@@ -360,13 +397,10 @@ st_mat3_sum(const st_mat3* a, const st_mat3* b)
     }
     
     st_mat3 sum;
-    
-    {
-	size_t i;
-	for(i = 0; i < 9; i++)
-	    sum.A[i] = a->A[i] + b->A[i];
-    }
-
+    // Take advantage of matrix representation on memory, which is
+    // basically a vector of n x m elements
+    __st_generic_vec_sum((float*)&sum, (const float*)a->A,
+			 (const float*)b->A, 9);
     return sum;
 }
 
@@ -379,13 +413,10 @@ st_mat3_sub(const st_mat3* a, const st_mat3* b)
     }
     
     st_mat3 sub;
-    
-    {
-	size_t i;
-	for(i = 0; i < 9; i++)
-	    sub.A[i] = a->A[i] - b->A[i];
-    }
-
+    // Take advantage of matrix representation on memory, which is
+    // basically a vector of n x m elements
+    __st_generic_vec_sub((float*)&sub, (const float*)a->A,
+			 (const float*)b->A, 9);
     return sub;
 }
 
@@ -405,12 +436,8 @@ st_mat3_scalar_mult(float c, const st_mat3* a)
     }
     
     st_mat3 mult;
-
-    {
-	size_t i;
-	for(i = 0; i < 9; i++)
-	    mult.A[i] = c * a->A[i];
-    }
+    // Take advantage of representation on RAM
+    __st_generic_vec_mult((float*)&mult, c, (const float*)a, 9);
 
     return mult;
 }
@@ -468,12 +495,8 @@ st_mat4_scalar_mult(float c, const st_mat4* a)
     }
     
     st_mat4 mult;
-
-    {
-	size_t i;
-	for(i = 0; i < 16; i++)
-	    mult.A[i] = c * a->A[i];
-    }
+    // Take advantage of representation on RAM
+    __st_generic_vec_mult((float*)&mult, c, (const float*)a, 16);
 
     return mult;
 }

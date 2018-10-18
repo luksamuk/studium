@@ -73,6 +73,13 @@ main(void)
     fputs("m^t = ", stdout);
     st_mat3_print(&mt);
 
+    // Sum mat3 with its transpose
+    {
+	st_mat3 sum = st_mat3_sum(&m, &mt);
+	fputs("m + m^t = ", stdout);
+	st_mat3_print(&sum);
+    }
+
     // Print mat4
     st_mat4 m2 = st_mat4_identity();
     fputs("m2 = ", stdout);
