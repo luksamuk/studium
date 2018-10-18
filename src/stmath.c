@@ -2,6 +2,7 @@
 #include "studium/core.h"
 #include "studium/macros.h"
 #include <stddef.h>
+#include <string.h>
 
 /* ========================================================================== */
 /*                     General helper macros and functions                    */
@@ -19,6 +20,32 @@ __st_generic_vec_print(const float* V, size_t sz)
 	       V[i],
 	       (i != sz - 1) ? " " : "");
     }
+}
+
+static void
+__st_generic_vec_sum(float* dest, const float* a,
+		     const float* b, size_t sz)
+{
+    size_t i;
+    for(i = 0; i < sz; i++)
+	dest[i] = a[i] + b[i];
+}
+
+static void
+__st_generic_vec_sub(float* dest, const float* a,
+		     const float* b, size_t sz)
+{
+    size_t i;
+    for(i = 0; i < sz; i++)
+	dest[i] = a[i] - b[i];
+}
+
+static void
+__st_generic_vec_neg(float* dest, const float* a, size_t sz)
+{
+    size_t i;
+    for(i = 0; i < sz; i++)
+	dest[i] = -a[i];
 }
 
 static void
@@ -46,15 +73,14 @@ st_vec2_zero()
 st_vec2
 st_vec2_one()
 {
-    return st_unary(st_vec2);
+    return (st_vec2){1.0f, 1.0f};
 }
 
 st_vec2
 st_vec2_new(const float values[static 2])
 {
     st_vec2 new;
-    new.x = values[0];
-    new.y = values[1];
+    memcpy(&new, values, sizeof(float) * 2);
     return new;
 }
 
@@ -62,8 +88,7 @@ st_vec2
 st_vec2_sum(st_vec2 a, st_vec2 b)
 {
     st_vec2 sum;
-    sum.x = a.x + b.x;
-    sum.y = a.y + b.y;
+    __st_generic_vec_sum((float*)&sum, (const float*)&a, (const float*)&b, 2);
     return sum;
 }
 
@@ -71,8 +96,7 @@ st_vec2
 st_vec2_sub(st_vec2 a, st_vec2 b)
 {
     st_vec2 sub;
-    sub.x = a.x - b.x;
-    sub.y = a.y - b.y;
+    __st_generic_vec_sub((float*)&sub, (const float*)&a, (const float*)&b, 2);
     return sub;
 }
 
@@ -80,8 +104,7 @@ st_vec2
 st_vec2_neg(st_vec2 a)
 {
     st_vec2 neg;
-    neg.x = -a.x;
-    neg.y = -a.y;
+    __st_generic_vec_neg((float*)&neg, (const float*)&a, 2);
     return neg;
 }
 
@@ -133,16 +156,14 @@ st_vec3_zero()
 st_vec3
 st_vec3_one()
 {
-    return st_unary(st_vec3);
+    return (st_vec3){1.0f, 1.0f, 1.0f};
 }
 
 st_vec3
 st_vec3_new(const float values[static 3])
 {
     st_vec3 new;
-    new.x = values[0];
-    new.y = values[1];
-    new.z = values[2];
+    memcpy(&new, values, sizeof(float) * 3);
     return new;
 }
 
@@ -150,9 +171,7 @@ st_vec3
 st_vec3_sum(st_vec3 a, st_vec3 b)
 {
     st_vec3 sum;
-    sum.x = a.x + b.x;
-    sum.y = a.y + b.y;
-    sum.z = a.z + b.z;
+    __st_generic_vec_sum((float*)&sum, (const float*)&a, (const float*)&b, 3);
     return sum;
 }
 
@@ -160,9 +179,7 @@ st_vec3
 st_vec3_sub(st_vec3 a, st_vec3 b)
 {
     st_vec3 sub;
-    sub.x = a.x - b.x;
-    sub.y = a.y - b.y;
-    sub.z = a.z - b.z;
+    __st_generic_vec_sub((float*)&sub, (const float*)&a, (const float*)&b, 3);
     return sub;
 }
 
@@ -171,9 +188,7 @@ st_vec3
 st_vec3_neg(st_vec3 a)
 {
     st_vec3 neg;
-    neg.x = -a.x;
-    neg.y = -a.y;
-    neg.z = -a.z;
+    __st_generic_vec_neg((float*)&neg, (const float*)&a, 3);
     return neg;
 }
 
@@ -222,6 +237,92 @@ st_vec3_print(const st_vec3* a)
     puts(" }");
 }
 
+
+
+/* ========================================================================== */
+/*                                  st_vec4                                   */
+/* ========================================================================== */
+
+st_vec4
+st_vec4_zero()
+{
+    return st_empty(st_vec4);
+}
+
+st_vec4
+st_vec4_one()
+{
+    return (st_vec4){1.0f, 1.0f, 1.0f, 1.0f};
+}
+
+st_vec4
+st_vec4_new(const float values[static 4])
+{
+    st_vec4 new;
+    memcpy(&new, values, sizeof(float) * 4);
+    return new;
+}
+
+st_vec4
+st_vec4_sum(st_vec4 a, st_vec4 b)
+{
+    st_vec4 sum;
+    __st_generic_vec_sum((float*)&sum, (const float*)&a, (const float*)&b, 4);
+    return sum;
+}
+
+st_vec4
+st_vec4_sub(st_vec4 a, st_vec4 b)
+{
+    st_vec4 sub;
+    __st_generic_vec_sub((float*)&sub, (const float*)&a, (const float*)&b, 4);
+    return sub;
+}
+
+st_vec4
+st_vec4_neg(st_vec4 a)
+{
+    st_vec4 neg;
+    __st_generic_vec_neg((float*)&neg, (const float*)&a, 4);
+    return neg;
+}
+
+float
+st_vec4_sqdist(st_vec4 a, st_vec4 b)
+{
+    float deltaX = a.x - b.x,
+	deltaY = a.y - b.y,
+	deltaZ = a.z - b.z,
+	deltaW = a.w - b.w;
+    return (deltaX * deltaX) + (deltaY * deltaY)
+	+ (deltaZ * deltaZ) + (deltaW + deltaW);
+}
+
+float
+st_vec4_sqlen(st_vec4 a)
+{
+    return (a.x * a.x) + (a.y * a.y)
+	+ (a.z * a.z) + (a.w * a.w);
+}
+
+float
+st_vec4_dot(st_vec4 a, st_vec4 b)
+{
+    return (a.x * b.x) + (a.y * b.y)
+	+ (a.z * b.z) + (a.w * b.w);
+}
+
+void
+st_vec4_print(const st_vec4* a)
+{
+    if(!a) {
+	st_log_err("attempt on printing NULL reference to vector");
+	return;
+    }
+    fputs("vec4 { ", stdout);
+    __st_generic_vec_print((const float*)a, 4);
+    puts(" }");
+}
 
 
 /* ========================================================================== */
