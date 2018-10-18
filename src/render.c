@@ -11,30 +11,48 @@
 #define STB_IMAGE_IMPLEMENTATION
 #include "studium/stb_image.h"
 
+static inline int
+__st_check_window(const st_window* w)
+{
+    if(!w) {
+	st_log_crit("invalid reference to st_window");
+	return 1;
+    } else if(!w->hnd) {
+	st_log_crit("window was not created");
+	return 1;
+    }
+    return 0;
+}
+
 void
 st_window_init_renderer(const st_window* w)
 {
-    glfwMakeContextCurrent((GLFWwindow*)w->hnd);
-
-    assert(gladLoadGLLoader((GLADloadproc) glfwGetProcAddress));
-    
-    glViewport(0, 0, w->width, w->height);
-    glEnable(GL_TEXTURE_2D);
+    if(!__st_check_window(w)) {
+	glfwMakeContextCurrent((GLFWwindow*)w->hnd);
+	assert(gladLoadGLLoader((GLADloadproc) glfwGetProcAddress));
+	glViewport(0, 0, w->width, w->height);
+	glEnable(GL_TEXTURE_2D);
+    }
 }
 
 void
 st_window_game_loop(const st_window* w,
 		    void (*callback)())
 {
-    assert(callback);
-    glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
-    while(!glfwWindowShouldClose((GLFWwindow*)w->hnd)) {
-	glfwPollEvents();
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    if(!__st_check_window(w)) {
+	if(!callback) {
+	    st_log_err("invalid game loop callback");
+	    return;
+	}
+	glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
+	while(!glfwWindowShouldClose((GLFWwindow*)w->hnd)) {
+	    glfwPollEvents();
+	    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-        (*callback)();
+	    (*callback)();
 
-	glfwSwapBuffers((GLFWwindow*)w->hnd);
+	    glfwSwapBuffers((GLFWwindow*)w->hnd);
+	}
     }
 }
 
@@ -47,8 +65,11 @@ st_texture_load(const char* filename)
 				    &img.height,
 				    &img.bpp,
 				    0);
-    
-    assert(data);
+
+    if(!data) {
+	st_log_err("could not load texture");
+	return (st_texture){ 0 };
+    }
 
     glGenTextures(1, &img.id);
     glBindTexture(GL_TEXTURE_2D, img.id);
@@ -83,6 +104,18 @@ st_texture_load(const char* filename)
 void
 st_texture_unload(st_texture* img)
 {
-    glDeleteTextures(1, &img->id);
+    if(!img) {
+	st_log_err("attempt on unloading an invalid reference to a texture");
+	return;
+    }
+
     img->width = img->height = img->bpp = 0;
+
+    if(!img->id) {
+	st_log_warn("texture does not have a valid id, skipping");
+	return;
+    }
+    
+    glDeleteTextures(1, &img->id);
+    img->id = 0;
 }

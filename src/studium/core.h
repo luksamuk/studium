@@ -1,8 +1,6 @@
 #ifndef CORE_H
 #define CORE_H
 
-#include <assert.h>
-
 typedef struct
 {
     void*       hnd;

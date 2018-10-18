@@ -8,8 +8,8 @@ Coming soon.
 
 * Implementation
 
-** Vector arithmetic
-Based upon the book /"Real Time Collision Detection"/, by Christer Ericson.
+** Matrix and Vector operations
+Based upon the book "Real Time Collision Detection", by Christer Ericson.
 
 * License
 

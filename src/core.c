@@ -1,4 +1,5 @@
 #include "studium/core.h"
+#include "studium/macros.h"
 
 #ifdef _WIN32
 #    define APIENTRY __stdcall
@@ -10,7 +11,10 @@
 void
 st_init()
 {
-    assert(glfwInit());
+    if(!glfwInit()) {
+	st_log_crit("cannot connect to window system");
+	return;
+    }
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
