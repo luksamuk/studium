@@ -78,22 +78,25 @@ typedef struct {
 	float A[4];
 	struct {
 	    float a11, a12,
-		a21, a22,
-		a31, a32;
+		a21, a22;
 	};
     };
 } st_mat2;
 
 // Matrix operations
-/* st_mat2 st_mat2_identity(); */
-/* st_mat2 st_mat2_transpose(const st_mat2* a); */
-/* st_mat2 st_mat2_sum(const st_mat2* a, const st_mat2* b); */
-/* st_mat2 st_mat2_sub(const st_mat2* a, const st_mat2* b); */
+st_mat2 st_mat2_identity();
+st_mat2 st_mat2_transpose(const st_mat2* a);
+st_mat2 st_mat2_sum(const st_mat2* a, const st_mat2* b);
+st_mat2 st_mat2_sub(const st_mat2* a, const st_mat2* b);
 /* st_mat2 st_mat2_mult(const st_mat2* a, const st_mat2* b); */
+int st_mat2_inverse(st_mat2* dest, const st_mat2* a);
 
 // Scalar operations
-/* st_mat2 st_mat2_scalar_mult(float c, const st_mat2* a); */
-/* float   st_mat2_det(const st_mat2* a); */
+st_mat2 st_mat2_scalar_mult(float c, const st_mat2* a);
+float   st_mat2_det(const st_mat2* a);
+
+// Debugging
+void    st_mat2_print(const st_mat2* a);
 
 
 
@@ -115,6 +118,7 @@ st_mat3 st_mat3_transpose(const st_mat3* a);
 st_mat3 st_mat3_sum(const st_mat3* a, const st_mat3* b);
 st_mat3 st_mat3_sub(const st_mat3* a, const st_mat3* b);
 /* st_mat3 st_mat3_mult(const st_mat3* a, const st_mat3* b); */
+int st_mat3_inverse(st_mat3* dest, const st_mat3* a);
 
 // Scalar operations
 st_mat3 st_mat3_scalar_mult(float c, const st_mat3* a);

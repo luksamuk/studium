@@ -61,6 +61,22 @@ main(void)
     // Print NULL matrix; should provide an error
     st_mat3_print(NULL);
 
+    // Print mat2
+    st_mat2 mat = st_mat2_identity();
+    mat.a12 = 7.0f;
+    mat.a21 = 9.0f;
+    fputs("mat = ", stdout);
+    st_mat2_print(&mat);
+
+    // Print inverse of mat2
+    {
+	st_mat2 mat_inv;
+	if(!st_mat2_inverse(&mat_inv, &mat)) {
+	    fputs("mat^-1 = ", stdout);
+	    st_mat2_print(&mat_inv);
+	}
+    }
+
     // Print mat3
     st_mat3 m = st_mat3_identity();
     m.a12 = 5.0f;
@@ -73,11 +89,19 @@ main(void)
     fputs("m^t = ", stdout);
     st_mat3_print(&mt);
 
-    // Sum mat3 with its transpose
+    // Fun with mat3 ops
     {
+	// Sum mat3 with its transpose
 	st_mat3 sum = st_mat3_sum(&m, &mt);
 	fputs("m + m^t = ", stdout);
 	st_mat3_print(&sum);
+
+	// Print inverse of sum
+	st_mat3 mat_inv;
+	if(!st_mat3_inverse(&mat_inv, &sum)) {
+	    fputs("(m + m^t)^-1 = ", stdout);
+	    st_mat3_print(&mat_inv);
+	}
     }
 
     // Print mat4
