@@ -3,11 +3,13 @@
 #+EMAIL:  lucasvieira@lisp.com.br
 
 * Introduction
-
-Coming soon.
+Studium is a 2D game engine written in C from scratch. The main focus
+is on portability and simplicity, while striving to follow good design
+patterns.
 
 * Implementation
-
+** Unit testing
+Uses [[https://libcheck.github.io/check/][libcheck]].
 ** Matrix and Vector operations
 Based upon the book "Real Time Collision Detection", by Christer Ericson.
 
