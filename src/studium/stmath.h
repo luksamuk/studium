@@ -3,6 +3,9 @@
 
 #include <math.h>
 
+/* Global definitions */
+
+
 /* 2D Vector */
 typedef struct {
     float x, y;

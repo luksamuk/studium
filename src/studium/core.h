@@ -8,7 +8,7 @@ typedef struct
     int         height;
 } st_window;
 
-void st_init();
-void st_cleanup();
+int st_init();
+int st_cleanup();
 
 #endif // CORE_H

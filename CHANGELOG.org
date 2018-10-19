@@ -12,7 +12,7 @@ author's sympathy for the format from an organization standpoint.
 
 * Unreleased
 ** Added
-- Matrix arithmetic for 3x3 matrices;
+- Matrix arithmetic for 2x2, 3x3 and 4x4 matrices;
 - Vector arithmetic for 2D and 3D vectors;
 - Basic and agnostic interface for handling textures;
 - =stb_image.h= for minimal texture support;

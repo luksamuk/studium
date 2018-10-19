@@ -21,13 +21,7 @@ main(void)
 
     // Initialization
     st_window window = st_create_window(1280, 720, "Studium Engine");
-    st_window_init_renderer(NULL); // Should provide an error
     st_window_init_renderer(&window);
-    
-    // Alloc/dealloc test texture
-    st_texture img;
-    st_log_exec_debug(img = st_texture_load("res/box.png"));
-    st_log_exec_debug(st_texture_unload(&img));
 
     // Print NULL vector; should provide an error
     st_vec2_print(NULL);
