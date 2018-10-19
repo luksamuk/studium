@@ -15,14 +15,27 @@ set(GLFW_BUILD_EXAMPLES OFF CACHE BOOL "" FORCE)
 add_subdirectory(glfw-3.2.1)
 include_directories(glfw-3.2.1/include)
 
+## Build configuration
+
 # GLAD GL loader
 add_library(glad STATIC
   src/glad.c)
 
 # libstudium
 add_library(studium SHARED ${studium_SRC})
+target_link_libraries(studium glad glfw)
 set_property(TARGET studium PROPERTY C_STANDARD 11)
 
+
+## Instalation configuration
+# libstudium library
+install(TARGETS studium
+  LIBRARY DESTINATION lib)
+INSTALL(DIRECTORY ${CMAKE_SOURCE_DIR}/src/studium
+  DESTINATION include
+  FILES_MATCHING PATTERN "*.h")
+
+## Extra stuff
 include_directories(src/)
 
 # Test binary
@@ -37,16 +50,9 @@ add_executable(unit-tests
 set_property(TARGET unit-tests
   PROPERTY C_STANDARD 11)
 
-target_link_libraries(studium-test
-  studium
-  glad
-  glfw)
+target_link_libraries(studium-test studium)
 
-target_link_libraries(unit-tests
-  studium
-  glad
-  glfw
-  check)
+target_link_libraries(unit-tests studium check)
 
 enable_testing()
 add_test(NAME unit-tests

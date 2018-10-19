@@ -29,3 +29,9 @@ except for third-party software described below.
 - =khrplatform.h=
   Khronos Group platform-specific types and definitions, fetched by [[https://github.com/Dav1dde/glad][glad]].
   License is MIT.
+
+- =GLFW=
+  Used for all things related to input/output, windowing, context creation.
+  An awesome library distributed under the zlib license. Studium statically
+  links GLFW onto its own dynamic library, but please be wary that note of
+  this code is libstudium's!
