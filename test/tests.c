@@ -68,6 +68,84 @@ window_renderer_suite(void)
     return s;
 }
 
+/* ===========================================================================*/
+/*                           Matrix and Vector Test                           */
+/* ===========================================================================*/
+
+// Helper function
+static int
+compare_array(const float* array, const float* expected, size_t size)
+{
+    size_t i;
+    for(i = 0; i < size; i++)
+	if(array[i] != expected[i])
+	    return 1;
+    return 0;
+}
+
+// Helper macro
+#define assert_array_ok(arr1, expect, sz)		\
+    ck_assert_int_eq(compare_array((float*)&arr1,	\
+				   expect,		\
+				   sz),			\
+		     0)
+
+START_TEST(test_st_2dvectors)
+{
+    st_vec2 v2d_1 = st_vec2_zero();
+    st_vec2 v2d_2 = st_vec2_one();
+    st_vec2 v2d_3 = st_vec2_new((float[2]) {8.0f, 6.0f});
+
+    // Test 2D vector creation
+    {
+	const float* expect_1 = (float[2]){0.0f, 0.0f};
+	const float* expect_2 = (float[2]){1.0f, 1.0f};
+	const float* expect_3 = (float[2]){8.0f, 6.0f};
+    
+	assert_array_ok(v2d_1, expect_1, 2);
+	assert_array_ok(v2d_2, expect_2, 2);
+	assert_array_ok(v2d_3, expect_3, 2);
+    }
+
+    // Test 2D vector arithmetic
+
+    // Sum
+    {
+	st_vec2 sum = st_vec2_sum(v2d_2, v2d_3);
+	const float* expect = (float[2]){9.0f, 7.0f};
+	assert_array_ok(sum, expect, 2);
+    }
+
+    // Subtract
+    {
+	st_vec2 sub = st_vec2_sub(v2d_2, v2d_3);
+	const float* expect = (float[2]){-7.0f, -5.0f};
+	assert_array_ok(sub, expect, 2);
+    }
+
+    // Negate
+
+    // Scalar multiplication
+
+    // Cross multiplication
+
+    // TODO: more tests
+    
+}
+END_TEST
+
+Suite*
+vector_matrix_suite(void)
+{
+    Suite* s = suite_create("Vectors and Matrices");
+
+    TCase* tc_vectors = tcase_create("Vector Operations");
+    tcase_add_test(tc_vectors, test_st_2dvectors);
+
+    suite_add_tcase(s, tc_vectors);
+    return s;
+}
+
 
 /* ===========================================================================*/
 /*                                  Test Runner                               */
@@ -77,19 +155,13 @@ int
 main(void)
 {
     int failed;
-
-    Suite* s;
     SRunner* sr;
-
-    // Window and renderer test suite
-    s  = window_renderer_suite();
-    sr = srunner_create(s);
-
+    
+    sr = srunner_create(window_renderer_suite());
+    srunner_add_suite(sr, vector_matrix_suite());
     srunner_run_all(sr, CK_VERBOSE);
     failed = srunner_ntests_failed(sr);
     srunner_free(sr);
-
-    // Math test suite
     
     return failed;
 }
