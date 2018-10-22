@@ -693,6 +693,49 @@ st_mat4_identity()
 }
 
 st_mat4
+st_mat4_transpose(const st_mat4* a)
+{
+    if(!a) {
+	st_log_err("matrix operation on NULL reference to matrix");
+	return st_empty(st_mat4);
+    }
+    
+    st_mat4 t = {a->a11, a->a21, a->a31, a->a41,
+		 a->a12, a->a22, a->a32, a->a42,
+		 a->a13, a->a23, a->a33, a->a43,
+		 a->a14, a->a24, a->a34, a->a44};
+    return t;
+}
+
+st_mat4
+st_mat4_sum(const st_mat4* a, const st_mat4* b)
+{
+    if(!a || !b) {
+	st_log_err("matrix operation on one or two NULL references to matrices");
+	return st_empty(st_mat4);
+    }
+    
+    st_mat4 sum;
+    __st_generic_vec_sum((float*)&sum, (const float*)a->A,
+			 (const float*)b->A, 16);
+    return sum;
+}
+
+st_mat4
+st_mat4_sub(const st_mat4* a, const st_mat4* b)
+{
+    if(!a || !b) {
+	st_log_err("matrix operation on one or two NULL references to matrices");
+	return st_empty(st_mat4);
+    }
+    
+    st_mat4 sub;
+    __st_generic_vec_sub((float*)&sub, (const float*)a->A,
+			 (const float*)b->A, 16);
+    return sub;
+}
+
+st_mat4
 st_mat4_mult(const st_mat4* a, const st_mat4* b)
 {
     st_mat4 mult;
@@ -706,7 +749,7 @@ st_mat4_mult(const st_mat4* a, const st_mat4* b)
 st_mat4
 st_mat4_scalar_mult(float c, const st_mat4* a)
 {
-     if(!a) {
+    if(!a) {
 	st_log_err("arithmetic operation on NULL reference to matrix");
 	return st_empty(st_mat4);
     }
@@ -714,6 +757,53 @@ st_mat4_scalar_mult(float c, const st_mat4* a)
     st_mat4 mult;
     __st_generic_vec_mult((float*)&mult, c, (const float*)a, 16);
     return mult;
+}
+
+static void
+__st_mat4_compute_minor(const st_mat4* a, size_t col, st_mat3* out)
+{
+    // Since we're ignoring the first line, we can safely start at
+    // index 4 to index 15, ignoring only the given column.
+    size_t iter, n = 0;
+    for(iter = 4; iter < 16; iter++) {
+	if((iter - col) % 4) {
+	    out->A[n] = a->A[iter];
+	    n++;
+	}
+    }
+}
+
+float
+st_mat4_det(const st_mat4* a)
+{
+    if(!a) {
+	st_log_err("arithmetic operation on NULL reference to matrix");
+	return 0.0f;
+    }
+    
+    // The determinant for a 4x4 matrix can be broken down into special
+    // operations on 3x3 determinants.
+    // First, we take the first line of our matrix. For each number in an even
+    // row, we invert their signal. Now, for each of those factors, we take out
+    // their entire column, and also the entire first row of our 4x4 matrix.
+    // This should give us four different 3x3 matrices, which we can easily
+    // compute their determinants; then, we multiply said determinant to said
+    // factor. The result is the sum of all of those products.
+    // For a better demonstration, see:
+    // http://mathcentral.uregina.ca/QQ/database/QQ.09.07/h/rav1.html
+
+    float sum;    
+    size_t i;
+    st_mat3 minor_buffer;
+    
+    for(i = 0; i < 4; i++) {
+	float coefficient = a->A[i] * ((i % 2) ? -1.0f : 1.0f);
+	__st_mat4_compute_minor(a, i, &minor_buffer);
+	float minor_det = st_mat3_det(&minor_buffer);
+	sum += coefficient * minor_det;
+    }
+    
+    return sum;
 }
 
 void

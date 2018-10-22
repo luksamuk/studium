@@ -147,14 +147,14 @@ typedef struct {
 
 // Matrix operations
 st_mat4 st_mat4_identity();
-/* st_mat4 st_mat4_transpose(const st_mat4* a); */
-/* st_mat4 st_mat4_sum(const st_mat4* a, const st_mat4* b); */
-/* st_mat4 st_mat4_sub(const st_mat4* a, const st_mat4* b); */
+st_mat4 st_mat4_transpose(const st_mat4* a);
+st_mat4 st_mat4_sum(const st_mat4* a, const st_mat4* b);
+st_mat4 st_mat4_sub(const st_mat4* a, const st_mat4* b);
 st_mat4 st_mat4_mult(const st_mat4* a, const st_mat4* b);
 
 // Scalar operations
 st_mat4 st_mat4_scalar_mult(float c, const st_mat4* a);
-/* float   st_mat4_det(const st_mat4* a); */
+float   st_mat4_det(const st_mat4* a);
 
 // Debugging
 void    st_mat4_print(const st_mat4* a);

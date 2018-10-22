@@ -148,6 +148,18 @@ START_TEST(test_st_2dvectors)
 	assert_array_ok(result.A, expect, 4);
     }
 
+    // Determinants of 4x4 matrices
+    {
+	st_mat4 mat;
+	const float* buf = (float[16]){  1.0f, 4.0f, 2.0f, 3.0f,
+					 0.0f, 1.0f, 4.0f, 4.0f,
+					-1.0f, 0.0f, 1.0f, 0.0f,
+					 2.0f, 0.0f, 4.0f, 1.0f };
+	memcpy(mat.A, buf, sizeof(float) * 16);
+	float det = st_mat4_det(&mat);
+	ck_assert_float_eq(det, 65.0f);
+    }
+
     // TODO: more tests
     
 }
