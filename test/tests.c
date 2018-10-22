@@ -128,6 +128,25 @@ START_TEST(test_st_2dvectors)
     // Scalar multiplication
 
     // Cross multiplication
+    // Algorithm applies to all kinds of matrices
+    {
+	st_mat2 mat1, mat2;
+	
+	// Copy these values to the matrices
+	{
+	    const float* buf = (float[4]){ 1.0f, 4.0f,
+					   3.0f, 3.0f  };
+	    size_t i;
+	    for(i = 0; i < 4; i++) {
+		mat1.A[i] = mat2.A[i] = buf[i];
+	    }
+	}
+
+	const float* expect = (float[4]){ 13.0f, 16.0f,
+					  12.0f, 21.0f  };
+	st_mat2 result = st_mat2_mult(&mat1, &mat2);
+	assert_array_ok(result.A, expect, 4);
+    }
 
     // TODO: more tests
     

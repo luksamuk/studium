@@ -11,6 +11,18 @@
 /* Macro with compound literal to zero-fill any vertex or matrix */
 #define st_empty(cast) (cast){  0  }
 
+// This macro converts the coordinates of an element a_{i, j} in a matrix
+// of the given order to its actual index on memory's linear representation.
+// All given indices must be base-0, e.g. a_{1, 2} means i = 0 and j = 1.
+#define st_mat_repr_index(i, j, order) (i * order) + j
+
+// This macro converts a memory index for a coordinate on the matrix to
+// its real (base-0) representation and store it on out_i and out_j, e.g.
+// index 3 on a matrix of order 2 yields i = 0 and j = 1.
+#define st_mat_real_indexes(index, order, out_i, out_j) \
+    out_i = (size_t)(index / order);			\
+    out_j = index - (out_i * order);
+
 /* Generic functions for printing both vertices and matrices */
 
 static void
@@ -74,6 +86,29 @@ __st_generic_vec_mult(float* dest, float c, const float* a, size_t sz)
     size_t i;
     for(i = 0; i < sz; i++)
 	dest[i] = c * a[i];
+}
+
+/*
+ * Generic functions for matrix operations
+ */
+
+// This procedure takes two matrices and calculate c_{i, j}, which compute
+// (a_{i, k} * b_{k, j}).
+// This procedure assumes a has the number of lines equal to the number of
+// columns in b. This number is given in the form of parameter "order".
+static float
+__st_generic_mat_mult_step(const float* a, const float* b,
+			   size_t real_index, size_t order)
+{
+    size_t i, j;
+    st_mat_real_indexes(real_index, order, i, j);
+    float sum = 0.0f;
+    size_t iter;
+    for(iter = 0; iter < order; iter++) {
+	sum += a[st_mat_repr_index(i, iter, order)] *
+	    b[st_mat_repr_index(iter, j, order)];
+    }
+    return sum;
 }
 
 /* ========================================================================== */
@@ -421,7 +456,16 @@ st_mat2_sub(const st_mat2* a, const st_mat2* b)
     return sub;
 }
 
-//st_mat2_mult
+st_mat2
+st_mat2_mult(const st_mat2* a, const st_mat2* b)
+{
+    st_mat2 mult;
+    size_t i;
+    for(i = 0; i < 4; i++) {
+	mult.A[i] = __st_generic_mat_mult_step(a->A, b->A, i, 2);
+    }
+    return mult;
+}
 
 static inline void
 __st_mat2_adjoint(st_mat2* dest, const st_mat2* a)
@@ -539,11 +583,16 @@ st_mat3_sub(const st_mat3* a, const st_mat3* b)
     return sub;
 }
 
-/* st_mat3 */
-/* st_mat3_mult(const st_mat3* a, const st_mat3* b) */
-/* { */
-/*     // cij = sum [k=1 to n] (aik * bkj) */
-/* } */
+st_mat3
+st_mat3_mult(const st_mat3* a, const st_mat3* b)
+{
+    st_mat3 mult;
+    size_t i;
+    for(i = 0; i < 9; i++) {
+	mult.A[i] = __st_generic_mat_mult_step(a->A, b->A, i, 3);
+    }
+    return mult;
+}
 
 static inline void
 __st_mat3_adjoint(st_mat3* dest, const st_mat3* a)
@@ -642,6 +691,16 @@ st_mat4_identity()
     return id;
 }
 
+st_mat4
+st_mat4_mult(const st_mat4* a, const st_mat4* b)
+{
+    st_mat4 mult;
+    size_t i;
+    for(i = 0; i < 16; i++) {
+	mult.A[i] = __st_generic_mat_mult_step(a->A, b->A, i, 4);
+    }
+    return mult;
+}
 
 st_mat4
 st_mat4_scalar_mult(float c, const st_mat4* a)

@@ -22,39 +22,8 @@ main(void)
     // Initialization
     st_window window = st_create_window(1280, 720, "Studium Engine");
     st_window_init_renderer(&window);
-
-    // Print NULL vector; should provide an error
-    st_vec2_print(NULL);
-
-    // Vector arithmetic
-    st_vec2 v1 = st_vec2_zero();
-    st_vec2 v2 = st_vec2_one();
-    st_vec2 v3 = st_vec2_new((float[2]){8.0f, 6.0f});
+    
     st_vec3 v4 = st_vec3_new((float[3]){5.0f, 4.0f, 7.0f});
-
-    /* Print vectors */
-    
-    fputs("v1 = ", stdout);
-    st_vec2_print(&v1);
-
-    fputs("v2 = ", stdout);
-    st_vec2_print(&v2);
-
-    fputs("v3 = ", stdout);
-    st_vec2_print(&v3);
-
-    fputs("v4 = ", stdout);
-    st_vec3_print(&v4);
-
-    // Attempt a vector sum and display
-    {
-	st_vec2 sum = st_vec2_sum(v2, v3);
-	fputs("v2 + v3 = ", stdout);
-	st_vec2_print(&sum);
-    }
-    
-    // Print NULL matrix; should provide an error
-    st_mat3_print(NULL);
 
     // Print mat2
     st_mat2 mat = st_mat2_identity();

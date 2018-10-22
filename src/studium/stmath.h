@@ -91,7 +91,7 @@ st_mat2 st_mat2_identity();
 st_mat2 st_mat2_transpose(const st_mat2* a);
 st_mat2 st_mat2_sum(const st_mat2* a, const st_mat2* b);
 st_mat2 st_mat2_sub(const st_mat2* a, const st_mat2* b);
-/* st_mat2 st_mat2_mult(const st_mat2* a, const st_mat2* b); */
+st_mat2 st_mat2_mult(const st_mat2* a, const st_mat2* b);
 int st_mat2_inverse(st_mat2* dest, const st_mat2* a);
 
 // Scalar operations
@@ -120,7 +120,7 @@ st_mat3 st_mat3_identity();
 st_mat3 st_mat3_transpose(const st_mat3* a);
 st_mat3 st_mat3_sum(const st_mat3* a, const st_mat3* b);
 st_mat3 st_mat3_sub(const st_mat3* a, const st_mat3* b);
-/* st_mat3 st_mat3_mult(const st_mat3* a, const st_mat3* b); */
+st_mat3 st_mat3_mult(const st_mat3* a, const st_mat3* b);
 int st_mat3_inverse(st_mat3* dest, const st_mat3* a);
 
 // Scalar operations
@@ -150,7 +150,7 @@ st_mat4 st_mat4_identity();
 /* st_mat4 st_mat4_transpose(const st_mat4* a); */
 /* st_mat4 st_mat4_sum(const st_mat4* a, const st_mat4* b); */
 /* st_mat4 st_mat4_sub(const st_mat4* a, const st_mat4* b); */
-/* st_mat4 st_mat4_mult(const st_mat4* a, const st_mat4* b); */
+st_mat4 st_mat4_mult(const st_mat4* a, const st_mat4* b);
 
 // Scalar operations
 st_mat4 st_mat4_scalar_mult(float c, const st_mat4* a);
