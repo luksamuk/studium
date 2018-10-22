@@ -92,10 +92,11 @@ __st_generic_vec_mult(float* dest, float c, const float* a, size_t sz)
  * Generic functions for matrix operations
  */
 
-// This procedure takes two matrices and calculate c_{i, j}, which compute
-// (a_{i, k} * b_{k, j}).
+// This procedure takes two matrices and calculate c_{i, j}, which computes
+// the sum of (a_{i, k} * b_{k, j}) for all k in [0..order].
 // This procedure assumes a has the number of lines equal to the number of
 // columns in b. This number is given in the form of parameter "order".
+// It is also assumed that the input matrices are square matrices.
 static float
 __st_generic_mat_mult_step(const float* a, const float* b,
 			   size_t real_index, size_t order)
