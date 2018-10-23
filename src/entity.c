@@ -1,6 +1,5 @@
 #include "studium/entity.h"
 #include "studium/macros.h"
-//#include <assert.h>
 
 /* ========================================================================== */
 /*                                  st_gamestate                              */
@@ -16,12 +15,12 @@
     }
 
 
-static size_t __st_global_entity_count = 0;
 
 st_gamestate
 st_gamestate_init()
 {
     st_gamestate state;
+    state.global_entity_count = 0;
     // "components" is an array of arrays
     state.components = st_array_new(sizeof(st_array));
 
@@ -52,12 +51,18 @@ st_gamestate_cleanup(st_gamestate* gs)
 
 
 st_entity
-st_gamestate_new_entity()
+st_gamestate_new_entity(st_gamestate* gs)
 {
-    size_t new_index = __st_global_entity_count;
-    __st_global_entity_count++;
+    size_t new_index = gs->global_entity_count;
+    gs->global_entity_count++;
     return new_index;
 }
+
+
+
+/* ========================================================================== */
+/*                                   st_entity                                */
+/* ========================================================================== */
 
 int
 st_entity_add_component(st_gamestate* gs, st_entity e, st_component_t type)

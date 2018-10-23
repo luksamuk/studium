@@ -84,7 +84,7 @@ main(void)
     st_gamestate gs = st_gamestate_init();
 
     puts("Creating new entity");
-    st_entity e = st_gamestate_new_entity();
+    st_entity e = st_gamestate_new_entity(&gs);
     printf("Entity name? %zu\n"
 	   "Entity has position? %d\n",
 	   e,
@@ -93,7 +93,9 @@ main(void)
     printf("What about now? %d\n",
 	   st_entity_has_component(&gs, e, ST_POSITION));
 
-    st_entity e2 = st_gamestate_new_entity();
+
+    puts("Creating new entity");
+    st_entity e2 = st_gamestate_new_entity(&gs);
     printf("Entity name? %zu\n"
 	   "Entity has position? %d\n",
 	   e2,
