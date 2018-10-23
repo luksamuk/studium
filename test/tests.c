@@ -182,6 +182,12 @@ vector_matrix_suite(void)
 /*                                  Test Runner                               */
 /* ===========================================================================*/
 
+// TODO:
+// - Finish porting all matrix tests
+//   - Prepare for more when actual graphics stuff comes
+// - Test growable array implementation
+// - Test entity system implementation
+
 int
 main(void)
 {

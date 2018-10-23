@@ -18,7 +18,6 @@ typedef struct {
 } st_mvp_c;
 
 typedef enum {
-    ST_ENTITY_TAGS,
     ST_POSITION,
     ST_MVP
 } st_component_t;
@@ -29,6 +28,7 @@ typedef enum {
 // Structure of Arrays approach
 typedef struct {
     size_t   global_entity_count;
+    st_array tags;
     st_array components;
 } st_gamestate;
 

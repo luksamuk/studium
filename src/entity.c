@@ -21,13 +21,13 @@ st_gamestate_init()
 {
     st_gamestate state;
     state.global_entity_count = 0;
+    state.tags = st_array_new(sizeof(size_t));
+    
     // "components" is an array of arrays
     state.components = st_array_new(sizeof(st_array));
 
     // Types of components must be added in the same order they
     // appear at st_component_t
-    __st_add_new_component(state.components, sizeof(size_t), ST_ENTITY_TAGS);
-    
     __st_add_new_component(state.components, sizeof(st_pos_c), ST_POSITION);
     __st_add_new_component(state.components, sizeof(st_mvp_c), ST_MVP);
     
@@ -71,7 +71,7 @@ st_entity_add_component(st_gamestate* gs, st_entity e, st_component_t type)
     // is always there for all entities, which make its access O(1).
     // What determines whether an entity has a component or not is a set
     // of bitwise flags.
-    size_t* tags = st_entity_get_component(gs, e, ST_ENTITY_TAGS);
+    size_t* tags = st_array_get(&gs->tags, e);
     if(!tags) {
 	st_log_err("unexisting entity");
 	return 1;
@@ -84,7 +84,7 @@ st_entity_add_component(st_gamestate* gs, st_entity e, st_component_t type)
 int
 st_entity_has_component(st_gamestate* gs, st_entity e, st_component_t type)
 {
-    size_t* tags = st_entity_get_component(gs, e, ST_ENTITY_TAGS);
+    size_t* tags = st_array_get(&gs->tags, e);
     if(!tags) {
 	st_log_err("unexisting entity");
 	return 0;
