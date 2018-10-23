@@ -3,6 +3,7 @@
 #include "studium/display.h"
 #include "studium/render.h"
 #include "studium/macros.h"
+#include "studium/entity.h"
 
 // https://github.com/Dav1dde/glad/blob/master/example/c%2B%2B/hellowindow2.cpp
 // https://github.com/Dav1dde/glad
@@ -77,6 +78,37 @@ main(void)
     st_mat4 m3 = st_mat4_scalar_mult(3.0f, &m2);
     fputs("2 * m2 = ", stdout);
     st_mat4_print(&m3);
+
+
+    puts("Testing entities...");
+    st_gamestate gs = st_gamestate_init();
+
+    puts("Creating new entity");
+    st_entity e = st_gamestate_new_entity();
+    printf("Entity name? %zu\n"
+	   "Entity has position? %d\n",
+	   e,
+	   st_entity_has_component(&gs, e, ST_POSITION));
+    st_entity_add_component(&gs, e, ST_POSITION);
+    printf("What about now? %d\n",
+	   st_entity_has_component(&gs, e, ST_POSITION));
+
+    st_entity e2 = st_gamestate_new_entity();
+    printf("Entity name? %zu\n"
+	   "Entity has position? %d\n",
+	   e2,
+	   st_entity_has_component(&gs, e2, ST_POSITION));
+    st_entity_add_component(&gs, e2, ST_POSITION);
+    printf("What about now? %d\n",
+	   st_entity_has_component(&gs, e2, ST_POSITION));
+    {
+	st_pos_c* position = st_entity_get_component(&gs, e2, ST_POSITION);
+	puts("e2's position:");
+	st_vec3_print(&position->p);
+	puts("All done.");
+    }
+    
+    st_gamestate_cleanup(&gs);
 
     // Game loop
     st_window_game_loop(&window, game_loop);

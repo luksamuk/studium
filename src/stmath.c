@@ -792,7 +792,7 @@ st_mat4_det(const st_mat4* a)
     // For a better demonstration, see:
     // http://mathcentral.uregina.ca/QQ/database/QQ.09.07/h/rav1.html
 
-    float sum;    
+    float sum;
     size_t i;
     st_mat3 minor_buffer;
     

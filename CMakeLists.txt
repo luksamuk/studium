@@ -1,6 +1,7 @@
 cmake_minimum_required(VERSION 2.8)
 
 project(studium)
+set(CMAKE_C_STANDARD 11)
 
 file(GLOB studium_SRC
   "src/*.c")
@@ -24,7 +25,6 @@ add_library(glad STATIC
 # libstudium
 add_library(studium SHARED ${studium_SRC})
 target_link_libraries(studium glad glfw)
-set_property(TARGET studium PROPERTY C_STANDARD 11)
 
 
 ## Instalation configuration
@@ -41,14 +41,10 @@ include_directories(src/)
 # Test binary
 add_executable(studium-test
   test/studium-test.c)
-set_property(TARGET studium-test
-  PROPERTY C_STANDARD 11)
 
 # Unit tests
 add_executable(unit-tests
   test/tests.c)
-set_property(TARGET unit-tests
-  PROPERTY C_STANDARD 11)
 
 target_link_libraries(studium-test studium)
 
