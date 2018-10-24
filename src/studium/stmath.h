@@ -5,6 +5,8 @@
 
 /* Global definitions */
 
+#define st_degtorad(d) (M_PI * d) / 180.0
+#define st_radtodeg(r) (180.0 * r) / M_PI
 
 /* 2D Vector */
 typedef struct {

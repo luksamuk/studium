@@ -8,10 +8,41 @@
 // https://github.com/Dav1dde/glad/blob/master/example/c%2B%2B/hellowindow2.cpp
 // https://github.com/Dav1dde/glad
 
+
+// Dummy components.
+typedef enum {
+    TEST_POSITION,
+    TEST_MVP
+} test_component_t;
+
+typedef struct {
+    st_vec3 p;
+} test_pos_c;
+
+typedef struct {
+    st_mat4 model;
+    st_mat4 view;
+    st_mat4 projection;
+} test_mvp_c;
+
+static st_entity dummy;
+static int count;
+
 void
 game_loop(st_gamestate* gs)
 {
-    
+    count = (count + 1) % 360;
+    if(st_entity_has_component(gs, dummy, TEST_POSITION)) {
+	test_pos_c* position =
+	    st_entity_get_component(gs, dummy, TEST_POSITION);
+	
+	float angle_radians = st_degtorad(count);
+	position->p.x = 20.0f * sin(angle_radians);
+	position->p.y = 40.0f * cos(angle_radians);
+	if(!(count % 20)) {
+	    st_vec3_print(&position->p);
+	}
+    }
 }
 
 int
@@ -23,82 +54,24 @@ main(void)
     // Initialization
     st_window window = st_create_window(1280, 720, "Studium Engine");
     st_window_init_renderer(&window);
-    
-    st_vec3 v4 = st_vec3_new((float[3]){5.0f, 4.0f, 7.0f});
 
-    // Print mat2
-    st_mat2 mat = st_mat2_identity();
-    mat.a12 = 7.0f;
-    mat.a21 = 9.0f;
-    fputs("mat = ", stdout);
-    st_mat2_print(&mat);
-
-    // Print inverse of mat2
-    {
-	st_mat2 mat_inv;
-	if(!st_mat2_inverse(&mat_inv, &mat)) {
-	    fputs("mat^-1 = ", stdout);
-	    st_mat2_print(&mat_inv);
-	}
-    }
-
-    // Print mat3
-    st_mat3 m = st_mat3_identity();
-    m.a12 = 5.0f;
-    m.a13 = 8.0f;
-    fputs("m = ", stdout);
-    st_mat3_print(&m);
-
-    // Transpose mat3 and print
-    st_mat3 mt = st_mat3_transpose(&m);
-    fputs("m^t = ", stdout);
-    st_mat3_print(&mt);
-
-    // Fun with mat3 ops
-    {
-	// Sum mat3 with its transpose
-	st_mat3 sum = st_mat3_sum(&m, &mt);
-	fputs("m + m^t = ", stdout);
-	st_mat3_print(&sum);
-
-	// Print inverse of sum
-	st_mat3 mat_inv;
-	if(!st_mat3_inverse(&mat_inv, &sum)) {
-	    fputs("(m + m^t)^-1 = ", stdout);
-	    st_mat3_print(&mat_inv);
-	}
-    }
-
-    // Print mat4
-    st_mat4 m2 = st_mat4_identity();
-    fputs("m2 = ", stdout);
-    st_mat4_print(&m2);
-
-    // Scalar multiplication
-    st_mat4 m3 = st_mat4_scalar_mult(3.0f, &m2);
-    fputs("2 * m2 = ", stdout);
-    st_mat4_print(&m3);
-
-
-
+    // Prepare gamestate
     st_gamestate gs = st_gamestate_init();
+    st_gamestate_register_component(&gs, TEST_POSITION, sizeof(test_pos_c));
+    st_gamestate_register_component(&gs, TEST_MVP,      sizeof(test_mvp_c));
 
+    // Prepare dumb test
+    count = 0;
 
-    st_entity e2 = st_gamestate_new_entity(&gs);
-    st_entity_add_component(&gs, e2, ST_POSITION);
-    
-    {
-	st_pos_c* position = st_entity_get_component(&gs, e2, ST_POSITION);
-	puts("e2's position:");
-	st_vec3_print(&position->p);
-	puts("All done.");
-    }
+    // Prepare dummy entity
+    dummy = st_gamestate_new_entity(&gs);
+    st_entity_add_component(&gs, dummy, TEST_POSITION);
 
     // Game loop
     st_window_game_loop(&window, game_loop, &gs);
 
     // Cleanup
-    st_log_exec_debug(st_gamestate_cleanup(&gs));
-    st_log_exec_debug(st_cleanup());
+    st_gamestate_cleanup(&gs);
+    st_cleanup();
     return 0;
 }

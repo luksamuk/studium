@@ -20,17 +20,13 @@ st_gamestate
 st_gamestate_init()
 {
     st_gamestate state;
-    state.global_entity_count = 1;
+    state.global_entity_count    = 1;
+    state.global_component_count = 0;
     state.tags = st_array_new(sizeof(size_t));
+    state.tags = st_array_new(sizeof(int));
     
     // "components" is an array of arrays
     state.components = st_array_new(sizeof(st_array));
-
-    // Types of components must be added in the same order they
-    // appear at st_component_t
-    __st_add_new_component(state.components, sizeof(st_pos_c), ST_POSITION);
-    __st_add_new_component(state.components, sizeof(st_mvp_c), ST_MVP);
-    
     return state;
 }
 
@@ -54,12 +50,25 @@ st_entity
 st_gamestate_new_entity(st_gamestate* gs)
 {
     if(!gs) {
-	st_log_err("attempt cleanup operation on NULL reference to gamestate");
+	st_log_err("attempt operation on NULL reference to gamestate");
 	return 0;
     }
     size_t new_index = gs->global_entity_count;
     gs->global_entity_count++;
     return new_index;
+}
+
+int
+st_gamestate_register_component(st_gamestate* gs, size_t identifier,
+				size_t byte_size)
+{
+    if(!gs) {
+	st_log_err("attempt operation on NULL reference to gamestate");
+	return 1;
+    }
+    
+    __st_add_new_component(gs->components, byte_size, identifier);
+    return 0;
 }
 
 
@@ -107,4 +116,28 @@ st_entity_get_component(st_gamestate* gs, st_entity e, st_component_t type)
     }
     
     return st_array_get(component_array, e - 1);
+}
+
+int
+st_entity_alive(st_gamestate* gs, st_entity e)
+{
+    int* dead = st_array_get(&gs->dead, e - 1);
+    if(!dead) {
+	st_log_err("unexisting entity");
+	return 0;
+    }
+    return !(*dead);
+}
+
+int
+st_entity_kill(st_gamestate* gs, st_entity* e)
+{
+    int* dead = st_array_get(&gs->dead, (*e) - 1);
+    if(!dead) {
+	st_log_err("unexisting entity");
+	return 1;
+    }
+    *dead = 1;
+    *e = 0;
+    return 0;
 }

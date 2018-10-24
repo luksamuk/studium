@@ -124,8 +124,23 @@ START_TEST(test_st_2dvectors)
     }
 
     // Negate
+    {
+	st_vec3 v = st_vec3_new((float[3]){5.0f, 4.0f, 7.0f});
+	st_vec3 neg = st_vec3_neg(v);
+	const float* expect = (float[3]){-5.0f, -4.0f, -7.0f};
+	assert_array_ok(neg, expect, 3);
+    }
 
     // Scalar multiplication
+    {
+	st_mat4 mat = st_mat4_identity();
+	st_mat4 mult = st_mat4_scalar_mult(3.0f, &mat);
+	const float* expect = (float[16]){3.0f, 0.0f, 0.0f, 0.0f,
+					 0.0f, 3.0f, 0.0f, 0.0f,
+					 0.0f, 0.0f, 3.0f, 0.0f,
+					 0.0f, 0.0f, 0.0f, 3.0f};
+	assert_array_ok(mult, expect, 16);
+    }
 
     // Cross multiplication
     // Algorithm applies to all kinds of matrices
@@ -160,6 +175,23 @@ START_TEST(test_st_2dvectors)
 	ck_assert_float_eq(det, 65.0f);
     }
 
+    // Invert matrix
+    // TODO
+
+    // Transpose matrix
+    {
+	st_mat3 mat = st_mat3_identity();
+	mat.a12 = 5.0f;
+	mat.a13 = 8.0f;
+	st_mat3 transp = st_mat3_transpose(&mat);
+	const float* expect = (float[9]){1.0f, 0.0f, 0.0f,
+					 5.0f, 1.0f, 0.0f,
+					 8.0f, 0.0f, 1.0f};
+	assert_array_ok(transp, expect, 9);
+    }
+
+    // Sum two matrices
+
     // TODO: more tests
     
 }
@@ -174,6 +206,50 @@ vector_matrix_suite(void)
     tcase_add_test(tc_vectors, test_st_2dvectors);
 
     suite_add_tcase(s, tc_vectors);
+    return s;
+}
+
+
+/* ===========================================================================*/
+/*                         Entity and Component System Test                   */
+/* ===========================================================================*/
+
+typedef struct {
+    st_mat4 model;
+} c_dummy_position;
+
+typedef enum C_DUMMY_COMPONENTS {
+    C_POSITION
+} c_dummy_c_t;
+
+START_TEST(test_st_entities)
+{
+    st_gamestate gs = st_gamestate_init();
+    st_gamestate_register_component(&gs, C_POSITION, sizeof(c_dummy_position));
+
+    st_entity e = st_gamestate_new_entity(&gs);
+    ck_assert_uint_ne(e, 0);
+
+    // Entity has dummy position component?
+    int has_component = st_entity_has_component(&gs, e, C_POSITION);
+    ck_assert_int_eq(has_component, 0);
+
+    // Add component, then do stuff to id
+    st_entity_add_component(&gs, e, C_POSITION);
+    has_component = st_entity_has_component(&gs, e, C_POSITION);
+    ck_assert_int_ne(has_component, 0);
+    
+    st_gamestate_cleanup(&gs);
+}
+END_TEST
+
+Suite*
+entity_components_suite(void)
+{
+    Suite* s = suite_create("Entities and Components");
+    TCase* tc_entities = tcase_create("Entity Creation");
+    tcase_add_test(tc_entities, test_st_entities);
+    suite_add_tcase(s, tc_entities);
     return s;
 }
 
@@ -196,6 +272,8 @@ main(void)
     
     sr = srunner_create(window_renderer_suite());
     srunner_add_suite(sr, vector_matrix_suite());
+    srunner_add_suite(sr, entity_components_suite());
+    
     srunner_run_all(sr, CK_VERBOSE);
     failed = srunner_ntests_failed(sr);
     srunner_free(sr);

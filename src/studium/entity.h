@@ -5,34 +5,15 @@
 #include "studium/stmath.h"
 
 
-// Dummy components.
-// Remove later.
-typedef struct {
-    st_vec3 p;
-} st_pos_c;
-
-typedef struct {
-    st_mat4 model;
-    st_mat4 view;
-    st_mat4 projection;
-} st_mvp_c;
-
-// This representation is good initially, but the programmer
-// should be able to create a flexible amount of components.
-// The component type should be what a component type is: nothing
-// more than an index number, starting at zero.
-typedef enum {
-    ST_POSITION,
-    ST_MVP
-} st_component_t;
-
-//typedef size_t st_component_t;
+typedef size_t st_component_t;
 
 
 // Structure of Arrays approach
 typedef struct {
     size_t   global_entity_count;
+    size_t   global_component_count;
     st_array tags;
+    st_array dead;
     st_array components;
 } st_gamestate;
 
@@ -43,6 +24,9 @@ typedef size_t st_entity;
 st_gamestate st_gamestate_init();
 void         st_gamestate_cleanup(st_gamestate* gs);
 st_entity    st_gamestate_new_entity();
+int          st_gamestate_register_component(st_gamestate* gs,
+					     size_t identifier,
+					     size_t byte_size);
 
 
 int          st_entity_add_component(st_gamestate* gs,
@@ -54,5 +38,7 @@ int          st_entity_has_component(st_gamestate* gs,
 void*        st_entity_get_component(st_gamestate* gs,
 				     st_entity e,
 				     st_component_t type);
+int          st_entity_alive(st_gamestate* gs, st_entity e);
+int          st_entity_kill(st_gamestate* gs, st_entity* e);
 
 #endif // ENTITY_H
