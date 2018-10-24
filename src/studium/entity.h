@@ -17,6 +17,10 @@ typedef struct {
     st_mat4 projection;
 } st_mvp_c;
 
+// This representation is good initially, but the programmer
+// should be able to create a flexible amount of components.
+// The component type should be what a component type is: nothing
+// more than an index number, starting at zero.
 typedef enum {
     ST_POSITION,
     ST_MVP

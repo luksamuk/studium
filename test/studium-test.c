@@ -9,7 +9,7 @@
 // https://github.com/Dav1dde/glad
 
 void
-game_loop()
+game_loop(st_gamestate* gs)
 {
     
 }
@@ -80,42 +80,25 @@ main(void)
     st_mat4_print(&m3);
 
 
-    puts("Testing entities...");
+
     st_gamestate gs = st_gamestate_init();
 
-    puts("Creating new entity");
-    st_entity e = st_gamestate_new_entity(&gs);
-    printf("Entity name? %zu\n"
-	   "Entity has position? %d\n",
-	   e,
-	   st_entity_has_component(&gs, e, ST_POSITION));
-    st_entity_add_component(&gs, e, ST_POSITION);
-    printf("What about now? %d\n",
-	   st_entity_has_component(&gs, e, ST_POSITION));
 
-
-    puts("Creating new entity");
     st_entity e2 = st_gamestate_new_entity(&gs);
-    printf("Entity name? %zu\n"
-	   "Entity has position? %d\n",
-	   e2,
-	   st_entity_has_component(&gs, e2, ST_POSITION));
     st_entity_add_component(&gs, e2, ST_POSITION);
-    printf("What about now? %d\n",
-	   st_entity_has_component(&gs, e2, ST_POSITION));
+    
     {
 	st_pos_c* position = st_entity_get_component(&gs, e2, ST_POSITION);
 	puts("e2's position:");
 	st_vec3_print(&position->p);
 	puts("All done.");
     }
-    
-    st_gamestate_cleanup(&gs);
 
     // Game loop
-    st_window_game_loop(&window, game_loop);
+    st_window_game_loop(&window, game_loop, &gs);
 
     // Cleanup
+    st_log_exec_debug(st_gamestate_cleanup(&gs));
     st_log_exec_debug(st_cleanup());
     return 0;
 }

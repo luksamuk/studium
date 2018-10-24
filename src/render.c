@@ -37,7 +37,8 @@ st_window_init_renderer(const st_window* w)
 
 void
 st_window_game_loop(const st_window* w,
-		    void (*callback)())
+		    void (*callback)(st_gamestate*),
+		    st_gamestate* gs)
 {
     if(!__st_check_window(w)) {
 	if(!callback) {
@@ -49,7 +50,7 @@ st_window_game_loop(const st_window* w,
 	    glfwPollEvents();
 	    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-	    (*callback)();
+	    (*callback)(gs);
 
 	    glfwSwapBuffers((GLFWwindow*)w->hnd);
 	}
