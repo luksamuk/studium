@@ -43,19 +43,11 @@ st_gamestate_cleanup(st_gamestate* gs)
 	st_array_destroy(array);
     }
     st_array_destroy(&gs->components);
-}
-
-
-st_entity
-st_gamestate_new_entity(st_gamestate* gs)
-{
-    if(!gs) {
-	st_log_err("attempt operation on NULL reference to gamestate");
-	return 0;
-    }
-    size_t new_index = gs->global_entity_count;
-    gs->global_entity_count++;
-    return new_index;
+    st_array_destroy(&gs->tags);
+    st_array_destroy(&gs->dead);
+    gs->global_component_count = 0;
+    gs->global_entity_count = 1;
+    gs->delta_time = 0;
 }
 
 int
@@ -76,6 +68,18 @@ st_gamestate_register_component(st_gamestate* gs, size_t identifier,
 /* ========================================================================== */
 /*                                   st_entity                                */
 /* ========================================================================== */
+
+st_entity
+st_entity_new(st_gamestate* gs)
+{
+    if(!gs) {
+	st_log_err("attempt operation on NULL reference to gamestate");
+	return 0;
+    }
+    size_t new_index = gs->global_entity_count;
+    gs->global_entity_count++;
+    return new_index;
+}
 
 int
 st_entity_add_component(st_gamestate* gs, st_entity e, st_component_t type)

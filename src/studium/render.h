@@ -1,12 +1,12 @@
 #ifndef RENDER_H
 #define RENDER_H
 
-#include "core.h"
+#include "display.h"
 #include "stmath.h"
 #include "entity.h"
 
 void st_window_init_renderer(const st_window* w);
-void st_window_game_loop(const st_window* w,
+void st_window_game_loop(st_window* w,
 			 void (*callback)(st_gamestate*),
 			 st_gamestate* gs);
 

@@ -36,7 +36,7 @@ st_window_init_renderer(const st_window* w)
 }
 
 void
-st_window_game_loop(const st_window* w,
+st_window_game_loop(st_window* w,
 		    void (*callback)(st_gamestate*),
 		    st_gamestate* gs)
 {
@@ -47,11 +47,19 @@ st_window_game_loop(const st_window* w,
 	}
 	glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
 	while(!glfwWindowShouldClose((GLFWwindow*)w->hnd)) {
+	    // Dispatch events, clear screen
 	    glfwPollEvents();
 	    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
+	    // Delta time calculation
+	    double new_time = glfwGetTime();
+	    gs->delta_time = new_time - w->last_time;
+	    w->last_time = new_time;
+
+	    // Call gameloop function callback
 	    (*callback)(gs);
 
+	    // Swap buffers
 	    glfwSwapBuffers((GLFWwindow*)w->hnd);
 	}
     }

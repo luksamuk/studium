@@ -22,5 +22,6 @@ st_create_window(int width, int height, const char* title)
     
     w.width = width;
     w.height = height;
+    w.last_time = glfwGetTime();
     return w;
 }

@@ -227,7 +227,7 @@ START_TEST(test_st_entities)
     st_gamestate gs = st_gamestate_init();
     st_gamestate_register_component(&gs, C_POSITION, sizeof(c_dummy_position));
 
-    st_entity e = st_gamestate_new_entity(&gs);
+    st_entity e = st_entity_new(&gs);
     ck_assert_uint_ne(e, 0);
 
     // Entity has dummy position component?

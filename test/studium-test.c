@@ -11,19 +11,13 @@
 
 // Dummy components.
 typedef enum {
-    TEST_POSITION,
-    TEST_MVP
+    TEST_TRANSFORM
 } test_component_t;
 
 typedef struct {
-    st_vec3 p;
-} test_pos_c;
-
-typedef struct {
+    st_vec3 position;
     st_mat4 model;
-    st_mat4 view;
-    st_mat4 projection;
-} test_mvp_c;
+} test_transform_c;
 
 static st_entity dummy;
 static int count;
@@ -32,15 +26,16 @@ void
 game_loop(st_gamestate* gs)
 {
     count = (count + 1) % 360;
-    if(st_entity_has_component(gs, dummy, TEST_POSITION)) {
-	test_pos_c* position =
-	    st_entity_get_component(gs, dummy, TEST_POSITION);
+    if(st_entity_has_component(gs, dummy, TEST_TRANSFORM)) {
+	test_transform_c* transform =
+	    st_entity_get_component(gs, dummy, TEST_TRANSFORM);
 	
 	float angle_radians = st_degtorad(count);
-	position->p.x = 20.0f * sin(angle_radians);
-	position->p.y = 40.0f * cos(angle_radians);
+	transform->position.x = 20.0f * sin(angle_radians);
+	transform->position.y = 40.0f * cos(angle_radians);
 	if(!(count % 20)) {
-	    st_vec3_print(&position->p);
+	    st_vec3_print(&transform->position);
+	    printf("dt = %0.4lf\n", gs->delta_time);
 	}
     }
 }
@@ -57,15 +52,15 @@ main(void)
 
     // Prepare gamestate
     st_gamestate gs = st_gamestate_init();
-    st_gamestate_register_component(&gs, TEST_POSITION, sizeof(test_pos_c));
-    st_gamestate_register_component(&gs, TEST_MVP,      sizeof(test_mvp_c));
+    st_gamestate_register_component(&gs, TEST_TRANSFORM,
+				    sizeof(test_transform_c));
 
     // Prepare dumb test
     count = 0;
 
     // Prepare dummy entity
-    dummy = st_gamestate_new_entity(&gs);
-    st_entity_add_component(&gs, dummy, TEST_POSITION);
+    dummy = st_entity_new(&gs);
+    st_entity_add_component(&gs, dummy, TEST_TRANSFORM);
 
     // Game loop
     st_window_game_loop(&window, game_loop, &gs);

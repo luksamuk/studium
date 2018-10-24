@@ -4,3 +4,5 @@ glfw-3.2.1/
 bin/
 .dir-locals.el
 callgrind.out.*
+Testing/
+
