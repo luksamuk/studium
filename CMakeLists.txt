@@ -24,7 +24,7 @@ add_library(glad STATIC
 
 # libstudium
 add_library(studium SHARED ${studium_SRC})
-target_link_libraries(studium glad glfw)
+target_link_libraries(studium glad glfw /usr/local/lib/libcglm.a)
 
 
 ## Instalation configuration

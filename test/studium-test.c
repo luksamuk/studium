@@ -4,6 +4,7 @@
 #include "studium/render.h"
 #include "studium/macros.h"
 #include "studium/entity.h"
+#include <cglm/cglm.h>
 
 // https://github.com/Dav1dde/glad/blob/master/example/c%2B%2B/hellowindow2.cpp
 // https://github.com/Dav1dde/glad
@@ -15,8 +16,8 @@ typedef enum {
 } test_component_t;
 
 typedef struct {
-    st_vec3 position;
-    st_mat4 model;
+    vec3 position;
+    mat4 model;
 } test_transform_c;
 
 static st_entity dummy;
@@ -30,11 +31,14 @@ game_loop(st_gamestate* gs)
 	test_transform_c* transform =
 	    st_entity_get_component(gs, dummy, TEST_TRANSFORM);
 	
-	float angle_radians = st_degtorad(count);
-	transform->position.x = 20.0f * sin(angle_radians);
-	transform->position.y = 40.0f * cos(angle_radians);
+	float angle_radians = glm_rad(count);
+	transform->position[0] = 20.0f * sin(angle_radians);
+	transform->position[1] = 40.0f * cos(angle_radians);
 	if(!(count % 20)) {
-	    st_vec3_print(&transform->position);
+	    printf("Position: { %0.4f %0.4f %0.4f }\n",
+		   transform->position[0],
+		   transform->position[1],
+		   transform->position[2]);
 	    printf("dt = %0.4lf\n", gs->delta_time);
 	}
     }
@@ -48,7 +52,7 @@ main(void)
 
     // Initialization
     st_window window = st_create_window(1280, 720, "Studium Engine");
-    st_window_init_renderer(&window);
+    st_log_exec_debug(st_window_init_renderer(&window));
 
     // Prepare gamestate
     st_gamestate gs = st_gamestate_init();
@@ -63,10 +67,10 @@ main(void)
     st_entity_add_component(&gs, dummy, TEST_TRANSFORM);
 
     // Game loop
-    st_window_game_loop(&window, game_loop, &gs);
+    st_log_exec_debug(st_window_game_loop(&window, game_loop, &gs));
 
     // Cleanup
-    st_gamestate_cleanup(&gs);
-    st_cleanup();
+    st_log_exec_debug(st_gamestate_cleanup(&gs));
+    st_log_exec_debug(st_cleanup());
     return 0;
 }

@@ -2,7 +2,6 @@
 #define ENTITY_H
 
 #include "array.h"
-#include "stmath.h"
 
 
 typedef size_t st_component_t;

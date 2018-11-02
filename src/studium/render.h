@@ -2,7 +2,6 @@
 #define RENDER_H
 
 #include "display.h"
-#include "stmath.h"
 #include "entity.h"
 
 void st_window_init_renderer(const st_window* w);
@@ -20,7 +19,6 @@ typedef struct
 
 st_texture st_texture_load(const char* filename);
 void       st_texture_unload(st_texture* img);
-void       st_texture_render(st_texture* img,
-			     st_vec2     pos);
+//void       st_texture_render(st_texture* img, float x, float y);
 
 #endif // RENDER_H

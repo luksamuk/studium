@@ -11,7 +11,7 @@ patterns.
 ** Unit testing
 Uses [[https://libcheck.github.io/check/][libcheck]].
 ** Matrix and Vector operations
-Based upon the book "Real Time Collision Detection", by Christer Ericson.
+Uses [[https://cglm.readthedocs.io/en/latest/][cglm]].
 
 * License
 
