@@ -55,6 +55,11 @@
 #    define st_log_exec_crit(thunk)  thunk;
 
 #endif // STUDIUM_RELEASE
-    
+
+// One last very useful macro is this variadic INFO format.
+// Since it is only a wrapper for some kinds of information
+// while running the engine, we only define this one
+#define st_log_info_f(format, ...)				\
+    printf(" [ INFO ] " format, ##__VA_ARGS__);
 
 #endif // MACROS_H
