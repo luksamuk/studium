@@ -13,8 +13,8 @@ set(CMAKE_BUILD_TYPE Debug)
 set(GLFW_BUILD_DOCS OFF CACHE BOOL "" FORCE)
 set(GLFW_BUILD_TESTS OFF CACHE BOOL "" FORCE)
 set(GLFW_BUILD_EXAMPLES OFF CACHE BOOL "" FORCE)
-add_subdirectory(glfw-3.2.1)
-include_directories(glfw-3.2.1/include)
+add_subdirectory(glfw)
+include_directories(glfw/include)
 
 ## Build configuration
 
