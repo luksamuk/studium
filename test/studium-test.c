@@ -46,6 +46,26 @@ main(void)
     st_log_info("Studium Engine v0.x");
     st_log_exec_debug(st_init());
 
+    {
+	st_mat4 transl = st_mat4_identity();
+	st_mat4 scale  = st_mat4_identity();
+	st_mat4 rotate = st_mat4_identity();
+
+	st_translate3(&transl, (st_vec3){ 2.0f, 3.0f, 0.0f });
+	st_scale2(&scale, (st_vec2) { 2.0f, 2.0f });
+	st_rotate(&rotate, 2, st_degtorad(90.0f));
+
+	st_mat4_print(&transl);
+	
+	// Test translation
+	{
+	    st_vec4 position = st_vec4_new((float[4]){5.0f, 1.0f, 0.0f, 1.0f});
+	    st_vec4_print(&position);
+	    st_vec4 new_pos  = st_matvec_mult4(&rotate, &position);
+	    st_vec4_print(&new_pos);
+	}
+    }
+
     // Initialization
     st_window window = st_create_window(1280, 720, "Studium Engine");
     st_window_init_renderer(&window);

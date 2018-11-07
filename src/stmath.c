@@ -1,5 +1,4 @@
 #include "studium/stmath.h"
-#include "studium/core.h"
 #include "studium/macros.h"
 #include <stddef.h>
 #include <string.h>
@@ -30,7 +29,7 @@ __st_generic_vec_print(const float* V, size_t sz)
 {
     size_t i;
     for(i = 0; i < sz; i++) {
-	printf("%04.4f%s",
+	printf("%04.8f%s",
 	       V[i],
 	       (i != sz - 1) ? " " : "");
     }
@@ -41,7 +40,7 @@ __st_generic_mat_print(const float* A, size_t order)
 {
     size_t i;
     for(i = 0; i < order * order; i++) {
-	printf("%s%04.4f%c",
+	printf("%s%04.8f%c",
 	       (i % order) == 0 ? "\t" : "",
 	       A[i],
 	       ((i + 1) % order) == 0 ? '\n' : '\t');
@@ -109,6 +108,21 @@ __st_generic_mat_mult_step(const float* a, const float* b,
 	sum += a[st_mat_repr_index(i, iter, order)] *
 	    b[st_mat_repr_index(iter, j, order)];
     }
+    return sum;
+}
+
+// This will multiply each of the elements of a matrix' line by its
+// correspondent vector element, then sum the results. This function should be
+// essential for a matrix * vector multiplication, and should be used in a
+// per-resulting-vector-element basis.
+static inline float
+__st_generic_matvec_line_mult(const float* v, const float* matrix,
+			      size_t line, size_t order)
+{
+    float sum = 0.0f;
+    size_t start_index = line * order, i, j;
+    for(i = 0,  j = start_index; i < order;  i++, j++)
+	sum += v[i] * matrix[j];
     return sum;
 }
 
@@ -320,6 +334,12 @@ st_vec4
 st_vec4_one()
 {
     return (st_vec4){1.0f, 1.0f, 1.0f, 1.0f};
+}
+
+st_vec4
+st_vec4_origin()
+{
+    return (st_vec4){0.0f, 0.0f, 0.0f, 1.0f};
 }
 
 st_vec4
@@ -819,16 +839,225 @@ st_mat4_print(const st_mat4* a)
     puts("}");
 }
 
+
+
 /* ========================================================================== */
 /*                           Determinant Predicates                           */
 /* ========================================================================== */
+
+// TODO: There are ways to reduce the calculation steps for those.
+// For now, we can leave it as it is
 
 float
 st_orient2d(st_vec2 a, st_vec2 b, st_vec2 c)
 {
     st_mat3 buffer;
-    buffer.a11 = a.x; buffer.a12 = a.y; buffer.a13 = 1.0f;
-    buffer.a21 = b.x; buffer.a22 = b.y; buffer.a23 = 1.0f;
-    buffer.a31 = c.x; buffer.a32 = c.y; buffer.a33 = 1.0f;
+    /* const float proto_buffer[] = { */
+    /* 	a.x, a.y, 1.0f, */
+    /* 	b.x, b.y, 1.0f, */
+    /* 	c.x, c.y, 1.0f */
+    /* }; */
+    memcpy(buffer.A,     a.A, 2 * sizeof(float));
+    memcpy(buffer.A + 3, b.A, 2 * sizeof(float));
+    memcpy(buffer.A + 6, c.A, 2 * sizeof(float));
     return st_mat3_det(&buffer);
+}
+
+float
+st_orient3d(st_vec3 a, st_vec3 b, st_vec3 c, st_vec3 d)
+{
+    st_mat4 buffer;
+    /* const float proto_buffer[] = { */
+    /* 	a.x, a.y, a.z, 1.0f, */
+    /* 	b.x, b.y, b.z, 1.0f, */
+    /* 	c.x, c.y, c.z, 1.0f, */
+    /* 	d.x, d.y, d.z, 1.0f */
+    /* }; */
+    memcpy(buffer.A,      a.A, 3 * sizeof(float));
+    memcpy(buffer.A + 4,  b.A, 3 * sizeof(float));
+    memcpy(buffer.A + 8,  c.A, 3 * sizeof(float));
+    memcpy(buffer.A + 12, d.A, 3 * sizeof(float));
+    buffer.a14 = buffer.a24 = buffer.a34 = buffer.a44 = 1.0f;
+    return st_mat4_det(&buffer);
+}
+
+
+
+/* ========================================================================== */
+/*                           Matrix-Vector Products                           */
+/* ========================================================================== */
+
+st_vec2
+st_matvec_mult2(const st_mat2* m, const st_vec2* v)
+{
+    if(!m || !v) {
+	st_log_err("attempt to perform operation on NULL reference "
+		   "to matrix or vector");
+	return st_empty(st_vec2);
+    }
+    return (st_vec2) {
+	__st_generic_matvec_line_mult(v->A, m->A, 0, 2),
+	__st_generic_matvec_line_mult(v->A, m->A, 1, 2)
+    };
+}
+
+st_vec3
+st_matvec_mult3(const st_mat3* m, const st_vec3* v)
+{
+    if(!m || !v) {
+	st_log_err("attempt to perform operation on NULL reference "
+		   "to matrix or vector");
+	return st_empty(st_vec3);
+    }
+    return (st_vec3) {
+	__st_generic_matvec_line_mult(v->A, m->A, 0, 3),
+	__st_generic_matvec_line_mult(v->A, m->A, 1, 3),
+	__st_generic_matvec_line_mult(v->A, m->A, 2, 3)
+    };
+}
+
+st_vec4
+st_matvec_mult4(const st_mat4* m, const st_vec4* v)
+{
+    if(!m || !v) {
+	st_log_err("attempt to perform operation on NULL reference "
+		   "to matrix or vector");
+	return st_empty(st_vec4);
+    }
+    return (st_vec4) {
+	__st_generic_matvec_line_mult(v->A, m->A, 0, 4),
+	__st_generic_matvec_line_mult(v->A, m->A, 1, 4),
+	__st_generic_matvec_line_mult(v->A, m->A, 2, 4),
+	__st_generic_matvec_line_mult(v->A, m->A, 3, 4)
+    };
+}
+
+
+
+/* ========================================================================== */
+/*                            Graphics Operations                             */
+/* ========================================================================== */
+
+void
+st_translate2(st_mat4* matrix, st_vec2 coords)
+{
+    if(!matrix) {
+	st_log_err("attempt to perform operation on NULL reference to matrix");
+	return;
+    }
+    matrix->a14 += coords.x;
+    matrix->a24 += coords.y;
+}
+
+void
+st_translate3(st_mat4* matrix, st_vec3 coords)
+{
+    if(!matrix) {
+	st_log_err("attempt to perform operation on NULL reference to matrix");
+	return;
+    }
+    matrix->a14 += coords.x;
+    matrix->a24 += coords.y;
+    matrix->a34 += coords.z;
+}
+
+void
+st_scale(st_mat4* matrix, int axis, float factor)
+{
+    if(!matrix) {
+	st_log_err("attempt to perform operation on NULL reference to matrix");
+	return;
+    } else if(axis < 0 || axis > 2) {
+	st_log_err("Cannot perform scaling with invalid axis");
+	return;
+    }
+    matrix->A[axis * 5] *= factor;
+}
+
+// Generic helper function for performing scaling over a matrix.
+// Given a vector order, will grab each factor and place it in the main diagonal
+static inline void
+__st_generic_mat4_scale(st_mat4* matrix, const float* vector, size_t order)
+{
+    size_t i;
+    for(i = 0; i < order; i++) {
+	matrix->A[i * 5] *= vector[i];
+    }
+}
+
+void
+st_scale2(st_mat4* matrix, st_vec2 factors)
+{
+    if(!matrix) {
+	st_log_err("attempt to perform operation on NULL reference to matrix");
+	return;
+    }
+    __st_generic_mat4_scale(matrix, factors.A, 2);
+}
+
+void
+st_scale3(st_mat4* matrix, st_vec3 factors)
+{
+    if(!matrix) {
+	st_log_err("attempt to perform operation on NULL reference to matrix");
+	return;
+    }
+    __st_generic_mat4_scale(matrix, factors.A, 3);
+}
+
+static inline void
+__st_rotate_x(st_mat4* matrix, float theta)
+{
+    const st_mat4 x_rotation_matrix = (st_mat4) {
+	1.0f,    0.0f,        0.0f,    0.0f,
+	0.0f, cos(theta), -sin(theta), 0.0f,
+	0.0f, sin(theta),  cos(theta), 0.0f,
+	0.0f,    0.0f,        0.0f,    1.0f
+    };
+    st_mat4 result = st_mat4_mult(matrix, &x_rotation_matrix);
+    memcpy(matrix, result.A, sizeof(st_mat4));
+}
+
+static inline void
+__st_rotate_y(st_mat4* matrix, float theta)
+{
+    const st_mat4 y_rotation_matrix = (st_mat4) {
+	cos(theta),  0.0f, sin(theta), 0.0f,
+	   0.0f,     1.0f,   0.0f,     0.0f,
+	-sin(theta), 0.0f, cos(theta), 0.0f,
+	   0.0f,     0.0f,   0.0f,     1.0f
+    };
+    st_mat4 result = st_mat4_mult(matrix, &y_rotation_matrix);
+    memcpy(matrix, result.A, sizeof(st_mat4));
+}
+
+static inline void
+__st_rotate_z(st_mat4* matrix, float theta)
+{
+    const st_mat4 z_rotation_matrix = (st_mat4) {
+	cos(theta), -sin(theta), 0.0f, 0.0f,
+	sin(theta),  cos(theta), 0.0f, 0.0f,
+	   0.0f,        0.0f,    1.0f, 0.0f,
+	   0.0f,        0.0f,    0.0f, 1.0f
+    };
+    st_mat4 result = st_mat4_mult(matrix, &z_rotation_matrix);
+    memcpy(matrix, result.A, sizeof(st_mat4));
+}
+
+void
+st_rotate(st_mat4* matrix, int axis, float theta)
+{
+    if(!matrix) {
+	st_log_err("attempt to perform operation on NULL reference to matrix");
+	return;
+    } else if(axis < 0 || axis > 2) {
+	st_log_err("Cannot perform rotation with invalid axis");
+	return;
+    }
+    switch(axis) {
+    case 0: __st_rotate_x(matrix, theta); break;
+    case 1: __st_rotate_y(matrix, theta); break;
+    case 2: __st_rotate_z(matrix, theta); break;
+    default: break;
+    };
 }

@@ -72,7 +72,7 @@ window_renderer_suite(void)
 /*                           Matrix and Vector Test                           */
 /* ===========================================================================*/
 
-// Helper function
+// Helper functions
 static int
 compare_array(const float* array, const float* expected, size_t size)
 {
@@ -83,11 +83,27 @@ compare_array(const float* array, const float* expected, size_t size)
     return 0;
 }
 
+static int
+compare_array_trunc(const float* array, const float* expected, size_t size)
+{
+    size_t i;
+    for(i = 0; i < size; i++)
+	if((int)array[i] != (int)expected[i])
+	    return 1;
+    return 0;
+}
+
 // Helper macro
 #define assert_array_ok(arr1, expect, sz)		\
     ck_assert_int_eq(compare_array((float*)&arr1,	\
 				   expect,		\
 				   sz),			\
+		     0)
+
+#define assert_array_trunc_ok(arr1, expect, sz)		\
+    ck_assert_int_eq(compare_array_trunc((float*)&arr1,	\
+					 expect,	\
+					 sz),		\
 		     0)
 
 START_TEST(test_st_2dvectors)
@@ -197,6 +213,97 @@ START_TEST(test_st_2dvectors)
 }
 END_TEST
 
+START_TEST(test_st_matvec_ops)
+{
+    // Identity x vector should be equal to vector
+    {
+	st_mat2 mat = st_mat2_identity();
+	st_vec2 vec = st_vec2_new((float[2]){ 5.0f, 4.0f });
+	st_vec2 mul = st_matvec_mult2(&mat, &vec);
+	assert_array_ok(mul.A, vec.A, 2);
+    }
+    
+    {
+	st_mat3 mat = st_mat3_identity();
+	st_vec3 vec = st_vec3_new((float[3]){ 5.0f, 4.0f, 3.0f });
+	st_vec3 mul = st_matvec_mult3(&mat, &vec);
+	assert_array_ok(mul.A, vec.A, 3);
+    }
+    
+    {
+	st_mat4 mat = st_mat4_identity();
+	st_vec4 vec = st_vec4_new((float[4]){ 5.0f, 4.0f, 3.0f, 2.0f });
+	st_vec4 mul = st_matvec_mult4(&mat, &vec);
+	assert_array_ok(mul.A, vec.A, 4);
+    }
+}
+END_TEST
+
+START_TEST(test_st_geometric)
+{
+    // Create template matrices for translating, scaling and rotating
+    // specific vectors
+    st_mat4 transl = st_mat4_identity();
+    st_mat4 scale  = st_mat4_identity();
+    st_mat4 rotate = st_mat4_identity();
+
+    /* Perform operations */
+    st_translate3(&transl, (st_vec3){ 2.0f, 3.0f, 0.0f });
+
+    st_scale2(&scale, (st_vec2) { 2.0f, 2.0f });
+    
+    // 90 degrees on Z axis counterclockwise.
+    // Put your left-hand's thumb towards the center of screen then
+    // see the movement of your other fingers closing.
+    st_rotate(&rotate, 2, st_degtorad(90.0f));
+
+    // Test translation
+    {
+       st_vec4 position = st_vec4_origin();
+       st_vec4 new_pos  = st_matvec_mult4(&transl, &position);
+       const float expected[] = { 2.0f, 3.0f, 0.0f, 1.0f };
+       assert_array_ok(new_pos.A, expected, 4);
+    }
+
+    // Test scaling
+    {
+	st_vec4 position = st_vec4_one();
+	st_vec4 new_pos  = st_matvec_mult4(&scale, &position);
+	const float expected[] = { 2.0f, 2.0f, 1.0f, 1.0f };
+	assert_array_ok(new_pos.A, expected, 4);
+    }
+
+    // Test rotation
+    // The following tests assume truncated values, due to floating
+    // point manipulation being a little uncertain.
+    {
+	st_vec4 position = (st_vec4){ 5.0f, 1.0f, 0.0f, 1.0f };
+	st_vec4 new_pos  = st_matvec_mult4(&rotate, &position);
+	// First rotation
+	{
+	    const float expected1[] = { -1.0, 5.0, 0.0, 1.0 };
+	    assert_array_trunc_ok(new_pos.A, expected1, 4);
+	}
+	// Second rotation
+	new_pos = st_matvec_mult4(&rotate, &new_pos);
+	{
+	    const float expected2[] = { -5.0f, -1.0f, 0.0f, 1.0f };
+	    assert_array_trunc_ok(new_pos.A, expected2, 4);
+	}
+	// Third rotation
+	new_pos = st_matvec_mult4(&rotate, &new_pos);
+	{
+	    const float expected3[] = { 1.0f, -5.0f, 0.0f, 1.0f };
+	    assert_array_trunc_ok(new_pos.A, expected3, 4);
+	}
+	// Fourth and final rotation, everything goes back to how
+	// it was on the beginning
+	new_pos = st_matvec_mult4(&rotate, &new_pos);
+        assert_array_trunc_ok(new_pos.A, position.A, 4);
+    }
+}
+END_TEST
+
 Suite*
 vector_matrix_suite(void)
 {
@@ -205,7 +312,15 @@ vector_matrix_suite(void)
     TCase* tc_vectors = tcase_create("Vector Operations");
     tcase_add_test(tc_vectors, test_st_2dvectors);
 
+    TCase* tc_matvec  = tcase_create("Matrix vs. Vector Operations");
+    tcase_add_test(tc_matvec, test_st_matvec_ops);
+
+    TCase* tc_geom    = tcase_create("Geometry Operations");
+    tcase_add_test(tc_geom, test_st_geometric);
+
     suite_add_tcase(s, tc_vectors);
+    suite_add_tcase(s, tc_matvec);
+    suite_add_tcase(s, tc_geom);
     return s;
 }
 

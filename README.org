@@ -12,7 +12,7 @@ patterns.
 Uses [[https://libcheck.github.io/check/][libcheck]].
 ** Matrix and Vector operations
 Based upon the book "Real Time Collision Detection", by Christer Ericson.
-
+Graphics operations based on the descriptions of [[https://open.gl/transformations][open.gl]] webpage.
 * License
 
 This software is distributed under the GNU Lesser General Public License v3.0,
