@@ -3,16 +3,68 @@
 #+EMAIL:  lucasvieira@lisp.com.br
 
 * Introduction
-Studium is a 2D game engine written in C from scratch. The main focus
-is on portability and simplicity, while striving to follow good design
-patterns.
+Studium is a 2D game engine written in C from scratch. The main focus is on
+portability and simplicity, while striving to follow good design patterns.
+
+By "portability", we mean that all code should be written in a way which makes
+it easy to compile for other systems, with minor modifications. The main focus
+is to make it run on Linux and Windows respectively.
+
+By "simplicity", we mean that all code written on this project should be
+organized and commented in a way which facilitates readability and understanding
+of the algorithms underlying the code. For that purpose, we use Unix-like
+indentation as one of the main tools.
+
+Studium is focused on writing its own codebase whenever there are no
+self-contained alternatives. Modularization is also a must, so certain systems
+are contained in their specific headers. As the name suggests, this project is a
+/study/ on C game development and comprehensive documentation.
 
 * Implementation
+** Windowing and Input
+Uses [[https://www.glfw.org/][GLFW]] for handling windowing and basic input support. The library is
+statically compiled for better redistribution.
+
+** Rendering
+Uses OpenGL 3.3 Core Profile, supposedly compatible with all hardware capable of
+running Direct3D 10+. This should also provide support for GLSL 1.5 language for
+shaders.
+
+*** GL Loader
+Uses [[https://glad.dav1d.de/][glad]] for loading OpenGL extensions. Also includes the =khrplatform.h=
+header, part of the Khronos Group API.
+
 ** Unit testing
-Uses [[https://libcheck.github.io/check/][libcheck]].
+Uses [[https://libcheck.github.io/check/][libcheck]]. The tests can be found on =test/tests.c=, and are normally
+compiled on the binary =unit-tests=.
+
 ** Matrix and Vector operations
 Based upon the book "Real Time Collision Detection", by Christer Ericson.
+
+*** Rendering-related operations
 Graphics operations based on the descriptions of [[https://open.gl/transformations][open.gl]] webpage.
+
+** Scripting
+TBD.
+
+* Compiling
+This project uses [[https://cmake.org/][CMake]], therefore it has no secrets in the compilation
+structure:
+
+#+BEGIN_SRC bash
+#!/bin/bash
+cd /path/to/studium
+mkdir bin && cd bin
+cmake ..
+make
+#+END_SRC
+
+The commands above should build the dynamic library =libstudium.so=, which will
+be a dependency for test binaries =studium-test= and =unit=tests=.
+
+* Documentation
+TBA.
+
 * License
 
 This software is distributed under the GNU Lesser General Public License v3.0,
