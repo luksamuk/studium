@@ -42,7 +42,7 @@ init_player(st_gamestate* gs, st_entity e)
     test_coordinate_c* coord =
 	st_entity_get_component(gs, e, TEST_COORDINATE);
 	
-    coord->position    = st_vec4_origin();
+    coord->position        = st_vec4_origin();
     transform->translation = st_mat4_identity();
     transform->scale       = st_mat4_identity();
     transform->rotation    = st_mat4_identity();

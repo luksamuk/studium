@@ -44,6 +44,9 @@ Based upon the book "Real Time Collision Detection", by Christer Ericson.
 *** Rendering-related operations
 Graphics operations based on the descriptions of [[https://open.gl/transformations][open.gl]] webpage.
 
+** Entity Management
+
+
 ** Scripting
 TBD.
 
@@ -85,5 +88,5 @@ except for third-party software described below.
 - =GLFW=
   Used for all things related to input/output, windowing, context creation.
   An awesome library distributed under the zlib license. Studium statically
-  links GLFW onto its own dynamic library, but please be wary that note of
-  this code is libstudium's!
+  links GLFW onto its own dynamic library, but please be wary that none of
+  this code is =libstudium='s!
