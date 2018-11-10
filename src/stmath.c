@@ -1014,8 +1014,7 @@ __st_rotate_x(st_mat4* matrix, float theta)
 	0.0f, sin(theta),  cos(theta), 0.0f,
 	0.0f,    0.0f,        0.0f,    1.0f
     };
-    st_mat4 result = st_mat4_mult(matrix, &x_rotation_matrix);
-    memcpy(matrix, result.A, sizeof(st_mat4));
+    *matrix = st_mat4_mult(matrix, &x_rotation_matrix);
 }
 
 static inline void
@@ -1027,8 +1026,7 @@ __st_rotate_y(st_mat4* matrix, float theta)
 	-sin(theta), 0.0f, cos(theta), 0.0f,
 	   0.0f,     0.0f,   0.0f,     1.0f
     };
-    st_mat4 result = st_mat4_mult(matrix, &y_rotation_matrix);
-    memcpy(matrix, result.A, sizeof(st_mat4));
+    *matrix = st_mat4_mult(matrix, &y_rotation_matrix);
 }
 
 static inline void
@@ -1040,8 +1038,7 @@ __st_rotate_z(st_mat4* matrix, float theta)
 	   0.0f,        0.0f,    1.0f, 0.0f,
 	   0.0f,        0.0f,    0.0f, 1.0f
     };
-    st_mat4 result = st_mat4_mult(matrix, &z_rotation_matrix);
-    memcpy(matrix, result.A, sizeof(st_mat4));
+    *matrix = st_mat4_mult(matrix, &z_rotation_matrix);
 }
 
 void
