@@ -12,7 +12,8 @@
 // Dummy components.
 typedef enum {
     TEST_TRANSFORM,
-    TEST_COORDINATE
+    TEST_COORDINATE,
+    TEST_RENDERER
 } test_component_t;
 
 typedef struct {
@@ -25,6 +26,11 @@ typedef struct {
     st_mat4 rotation;
 } test_transform_c;
 
+typedef struct {
+    st_texture texture;
+    st_mat4    vp;
+} test_renderer_c;
+
 static st_entity dummy;
 static int count;
 
@@ -33,6 +39,7 @@ init_player(st_gamestate* gs, st_entity e)
 {
     st_entity_add_component(gs, dummy, TEST_TRANSFORM);
     st_entity_add_component(gs, dummy, TEST_COORDINATE);
+    st_entity_add_component(gs, dummy, TEST_RENDERER);
 
     // No need for checking. Retrieve transform component
     // already, then do stuff
@@ -41,11 +48,28 @@ init_player(st_gamestate* gs, st_entity e)
 
     test_coordinate_c* coord =
 	st_entity_get_component(gs, e, TEST_COORDINATE);
+
+    test_renderer_c* rend =
+	st_entity_get_component(gs, e, TEST_RENDERER);
 	
     coord->position        = st_vec4_origin();
     transform->translation = st_mat4_identity();
     transform->scale       = st_mat4_identity();
     transform->rotation    = st_mat4_identity();
+
+    // Initialize rendering stuff
+    rend->texture = st_texture_load("res/box.png");
+
+    st_program_use(st_program_default);
+
+    st_gpu_program_attrib attr_pos =
+	st_program_attrib_location(st_program_default, "position"),
+	attr_col = st_program_attrib_location(st_program_default, "color"),
+	attr_tex = st_program_attrib_location(st_program_default, "texcoord");
+
+    st_gpu_program_uniform uni_mvp =
+	st_program_uniform_location(st_program_default, "mvp");
+	
 }
 
 void
@@ -74,12 +98,12 @@ update_player(st_gamestate* gs, st_entity e)
 					  &coord->position);
 
 	// Print stuff
-	if(!(count % 20)) {
+	if(!(count % 200)) {
 	    st_log_info_f("position: ");
 	    st_vec4_print(&coord->position);
 	    /* st_log_info_f("translation: "); */
 	    /* st_mat4_print(&transform->translation); */
-	    st_log_info_f("dt = %0.4lf\n\n", gs->delta_time);
+	    st_log_info_f("dt = %0.4lf\n", gs->delta_time);
 	}
     }
 }
@@ -91,6 +115,7 @@ game_init(st_gamestate* gs)
     // Prepare some components
     st_gamestate_register_component(gs, TEST_TRANSFORM, sizeof(test_transform_c));
     st_gamestate_register_component(gs, TEST_COORDINATE, sizeof(test_coordinate_c));
+    st_gamestate_register_component(gs, TEST_RENDERER, sizeof(test_renderer_c));
     
     // Prepare dumb test
     count = 0;
@@ -112,7 +137,7 @@ main(void)
 {
     st_log_info("Studium Engine v0.x");
     st_log_exec_debug(st_init());
-
+    
     // Initialization
     st_window window = st_create_window(1280, 720, "Studium Engine");
     st_window_init_renderer(&window);
@@ -128,6 +153,7 @@ main(void)
 
     // Cleanup
     st_gamestate_cleanup(&gs);
+    st_window_destroy_renderer(&window);
     st_cleanup();
     return 0;
 }

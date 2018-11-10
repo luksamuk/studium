@@ -13,6 +13,9 @@ st_window
 st_create_window(int width, int height, const char* title)
 {
     st_window w;
+
+    glfwWindowHint(GLFW_OPENGL_DEBUG_CONTEXT, GL_TRUE);
+    
     w.hnd = (void*)glfwCreateWindow(width, height, title, NULL, NULL);
     
     if(!w.hnd) {

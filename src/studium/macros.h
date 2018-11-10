@@ -8,9 +8,11 @@
 
 // Preparation for actual important macros
 #define __st_str_statement(x) #x
-#define __st_str_log_lvl(lvl) " [ " __st_str_statement(lvl) " ] "
-#define __st_log(lvl, thunk) puts(__st_str_log_lvl(lvl) thunk);
-
+#define __st_log(lvl, thunk)						\
+    printf(" [ %5.5s ] %s: %s\n", __st_str_statement(lvl), __func__, thunk);
+#define __st_log_f(lvl, format, ...)					\
+    printf(" [ %5.5s ] %s: " format,					\
+	   __st_str_statement(lvl), __func__, ##__VA_ARGS__);
 
 // The following macros should be used with string literals
 // for console messages only.
@@ -18,8 +20,19 @@
 #define st_log_debug(msg) __st_log(DEBUG, msg);
 #define st_log_warn(msg)  __st_log(WARN,  msg);
 #define st_log_crit(msg)  __st_log(CRIT,  msg);
-#define st_log_err(msg) \
-    printf(" [ ERR ] %s: %s\n", __func__, msg);
+#define st_log_err(msg)   __st_log(ERR,   msg);
+
+// And the following macros can be used just like printf, with a format.
+#define st_log_info_f(format, ...)					\
+    printf(" [  INFO ] %s: " format, __func__, ##__VA_ARGS__);
+#define st_log_debug_f(format, ...)					\
+    printf(" [ DEBUG ] %s: " format, __func__, ##__VA_ARGS__);
+#define st_log_warn_f(format, ...)					\
+    printf(" [  WARN ] %s: " format, __func__, ##__VA_ARGS__);
+#define st_log_crit_f(format, ...)					\
+    printf(" [  CRIT ] %s: " format, __func__, ##__VA_ARGS__);
+#define st_log_err_f(format, ...)					\
+    printf(" [   ERR ] %s: " format, __func__, ##__VA_ARGS__);
 
 // The following macros should be used for overall
 // debugging. Type in a specific thunk you wish to
@@ -55,11 +68,5 @@
 #    define st_log_exec_crit(thunk)  thunk;
 
 #endif // STUDIUM_RELEASE
-
-// One last very useful macro is this variadic INFO format.
-// Since it is only a wrapper for some kinds of information
-// while running the engine, we only define this one
-#define st_log_info_f(format, ...)				\
-    printf(" [ INFO ] " format, ##__VA_ARGS__);
 
 #endif // MACROS_H

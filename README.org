@@ -26,7 +26,7 @@ Uses [[https://www.glfw.org/][GLFW]] for handling windowing and basic input supp
 statically compiled for better redistribution.
 
 ** Rendering
-Uses OpenGL 3.3 Core Profile, supposedly compatible with all hardware capable of
+Uses [[https://www.khronos.org/registry/OpenGL/specs/gl/glspec33.core.pdf][OpenGL 3.3 Core Profile]], supposedly compatible with all hardware capable of
 running Direct3D 10+. This should also provide support for GLSL 1.5 language for
 shaders.
 
