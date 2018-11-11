@@ -46,7 +46,7 @@ Graphics operations based on the descriptions of [[https://open.gl/transformatio
 
 ** Entity Management
 
-
+TBD.
 ** Scripting
 TBD.
 
@@ -67,7 +67,9 @@ be a dependency for test binaries =studium-test= and =unit=tests=.
 
 * Documentation
 TBA.
-
+* Useful resources and links
+- [[https://www.scratchapixel.com/lessons/3d-basic-rendering/perspective-and-orthographic-projection-matrix/][Scratchpixel 2.0: The Perspective and Ortographic Projection Matrix]]
+- [[http://www.songho.ca/opengl/gl_projectionmatrix.html][OpenGL Projection Matrix]]
 * License
 
 This software is distributed under the GNU Lesser General Public License v3.0,
