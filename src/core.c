@@ -12,8 +12,8 @@ int
 st_init()
 {
     if(!glfwInit()) {
-	st_log_crit("cannot connect to window system");
-	return 1;
+        st_log_crit("cannot connect to window system");
+        return 1;
     }
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);

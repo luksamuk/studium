@@ -11,10 +11,10 @@
 /* 2D Vector */
 typedef struct {
     union {
-	float A[2];
-	struct {
-	    float x, y;
-	};
+        float A[2];
+        struct {
+            float x, y;
+        };
     };
 } st_vec2;
 
@@ -39,10 +39,10 @@ void    st_vec2_print(const st_vec2* a);
 /* 3D Vector */
 typedef struct {
     union {
-	float A[3];
-	struct {
-	    float x, y, z;
-	};
+        float A[3];
+        struct {
+            float x, y, z;
+        };
     };
 } st_vec3;
 
@@ -68,10 +68,10 @@ void    st_vec3_print(const st_vec3* a);
 /* 4D Vector */
 typedef struct {
     union {
-	float A[4];
-	struct {
-	    float x, y, z, w;
-	};
+        float A[4];
+        struct {
+            float x, y, z, w;
+        };
     };
 } st_vec4;
 
@@ -96,11 +96,11 @@ void    st_vec4_print(const st_vec4* a);
 /* 2D Matrix */
 typedef struct {
     union {
-	float A[4];
-	struct {
-	    float a11, a12,
-		a21, a22;
-	};
+        float A[4];
+        struct {
+            float a11, a12,
+                a21, a22;
+        };
     };
 } st_mat2;
 
@@ -124,12 +124,12 @@ void    st_mat2_print(const st_mat2* a);
 /* 3D Matrix */
 typedef struct {
     union {
-	float A[9];
-	struct {
-	    float a11, a12, a13,
-		a21, a22, a23,
-		a31, a32, a33;
-	};
+        float A[9];
+        struct {
+            float a11, a12, a13,
+                a21, a22, a23,
+                a31, a32, a33;
+        };
     };
 } st_mat3;
 
@@ -153,13 +153,13 @@ void    st_mat3_print(const st_mat3* a);
 /* 4D Matrix */
 typedef struct {
     union {
-	float A[16];
-	struct {
-	    float a11, a12, a13, a14,
-		a21, a22, a23, a24,
-		a31, a32, a33, a34,
-		a41, a42, a43, a44;
-	};
+        float A[16];
+        struct {
+            float a11, a12, a13, a14,
+                a21, a22, a23, a24,
+                a31, a32, a33, a34,
+                a41, a42, a43, a44;
+        };
     };
 } st_mat4;
 

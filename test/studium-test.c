@@ -147,6 +147,13 @@ main(void)
 
     // Initialize stuff
     game_init(&gs);
+
+    st_log_exec_debug(
+	st_gpu_shader vs = st_shader_from_file(ST_SHADER_VERTEX,
+					       "res/shaders/default.vs.glsl");
+	st_gpu_shader fs = st_shader_from_file(ST_SHADER_FRAGMENT,
+					       "res/shaders/default.fs.glsl");
+	);
     
     // Game loop
     st_window_game_loop(&window, game_loop, &gs);

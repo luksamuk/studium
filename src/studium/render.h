@@ -31,7 +31,7 @@ typedef struct
 st_texture st_texture_load(const char* filename);
 void       st_texture_unload(st_texture* img);
 void       st_texture_render(st_texture* img,
-			     st_vec2     pos);
+                             st_vec2     pos);
 
 
 
@@ -44,6 +44,7 @@ typedef enum
 } st_shader_type;
 
 st_gpu_shader st_shader_compile(st_shader_type type, const char* source);
+st_gpu_shader st_shader_from_file(st_shader_type type, const char* filename);
 void          st_shader_destroy(st_gpu_shader shader);
 
 
@@ -54,36 +55,36 @@ st_gpu_program         st_program_link(st_gpu_shader* shaders, size_t count);
 void                   st_program_destroy(st_gpu_program program);
 void                   st_program_use(st_gpu_program program);
 void                   st_program_bind_frag_data_location(st_gpu_program program,
-							  st_gpu_id color_number,
-							  const char* name);
+                                                          st_gpu_id color_number,
+                                                          const char* name);
 
 // Attributes
 st_gpu_program_attrib  st_program_attrib_location(st_gpu_program program,
-						  const char* name);
+                                                  const char* name);
 void                   st_attrib_enable(st_gpu_program_attrib attrib);
 void                   st_attrib_vertex_ptr_f(st_gpu_program_attrib attrib,
-					      size_t size,
-					      size_t stride,
-					      size_t offset);
+                                              size_t size,
+                                              size_t stride,
+                                              size_t offset);
 
 // Uniforms
 st_gpu_program_uniform st_program_uniform_location(st_gpu_program program,
-						   const char* name);
+                                                   const char* name);
 void                   st_uniform_setf(st_gpu_program_uniform u,
-				       const float* values,
-				       size_t count);
+                                       const float* values,
+                                       size_t count);
 void                   st_uniform_seti(st_gpu_program_uniform u,
-				       const int* values,
-				       size_t count);
+                                       const int* values,
+                                       size_t count);
 void                   st_uniform_setu(st_gpu_program_uniform u,
-				       const unsigned* values,
-				       size_t count);
+                                       const unsigned* values,
+                                       size_t count);
 void                   st_uniform_set_mat2(st_gpu_program_uniform u,
-					   const st_mat2* m);
+                                           const st_mat2* m);
 void                   st_uniform_set_mat3(st_gpu_program_uniform u,
-					   const st_mat3* m);
+                                           const st_mat3* m);
 void                   st_uniform_set_mat4(st_gpu_program_uniform u,
-					   const st_mat4* m);
+                                           const st_mat4* m);
 
 
 
@@ -101,7 +102,7 @@ st_gpu_program st_program_default   = 0;
 void st_window_init_renderer(const st_window* w);
 void st_window_destroy_renderer(st_window* w);
 void st_window_game_loop(st_window* w,
-			 void (*callback)(st_gamestate*),
-			 st_gamestate* gs);
+                         void (*callback)(st_gamestate*),
+                         st_gamestate* gs);
 
 #endif // RENDER_H

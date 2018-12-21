@@ -1,0 +1,25 @@
+#+TITLE: Studium Backlog
+#+AUTHOR: Lucas Vieira
+#+EMAIL: lucasvieira@lisp.com.br
+
+This is a backlog of the core features of Studium. I use this file to keep a
+relation of stuff I need to do. Pull requests modifying this file are also
+accepted, but discussion is prone to happen before they are merged.
+
+The major topics are not disposed in any particular order, however it would
+be interesting that subtopics are kept in descending order of importance or
+urgency.
+
+* Rendering
+
+* Math
+
+* Entity System
+
+* Audio
+
+* Asset Management
+
+* Scripting
+- Find or create a reliable, lightweight scripting language based on Scheme. The
+  less the overhead and the library size, the better.

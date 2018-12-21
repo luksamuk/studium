@@ -25,19 +25,19 @@ typedef size_t st_entity;
 st_gamestate st_gamestate_init();
 void         st_gamestate_cleanup(st_gamestate* gs);
 int          st_gamestate_register_component(st_gamestate* gs,
-					     size_t identifier,
-					     size_t byte_size);
+                                             size_t identifier,
+                                             size_t byte_size);
 
 st_entity    st_entity_new(st_gamestate* gs);
 int          st_entity_add_component(st_gamestate* gs,
-				     st_entity e,
-				     st_component_t type);
+                                     st_entity e,
+                                     st_component_t type);
 int          st_entity_has_component(st_gamestate* gs,
-				     st_entity e,
-				     st_component_t type);
+                                     st_entity e,
+                                     st_component_t type);
 void*        st_entity_get_component(st_gamestate* gs,
-				     st_entity e,
-				     st_component_t type);
+                                     st_entity e,
+                                     st_component_t type);
 int          st_entity_alive(st_gamestate* gs, st_entity e);
 int          st_entity_kill(st_gamestate* gs, st_entity* e);
 

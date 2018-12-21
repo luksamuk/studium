@@ -5,13 +5,13 @@
 /*                                  st_gamestate                              */
 /* ========================================================================== */
 
-#define __st_add_component_array(components, instance, n)	\
+#define __st_add_component_array(components, instance, n)       \
     st_array_put(&components, n, (void*)&instance)
 
-#define __st_add_new_component(components, size, c_type)		\
-    {									\
-        st_array component = st_array_new(size);			\
-	st_array_put(&components, (size_t)c_type, (void*)&component);	\
+#define __st_add_new_component(components, size, c_type)                \
+    {                                                                   \
+        st_array component = st_array_new(size);                        \
+        st_array_put(&components, (size_t)c_type, (void*)&component);   \
     }
 
 
@@ -34,13 +34,13 @@ void
 st_gamestate_cleanup(st_gamestate* gs)
 {
     if(!gs) {
-	st_log_err("attempt cleanup operation on NULL reference to gamestate");
-	return;
+        st_log_err("attempt cleanup operation on NULL reference to gamestate");
+        return;
     }
     size_t i;
     for(i = 0; i < gs->components.array_size; i++) {
-	st_array* array = st_array_get(&gs->components, i);
-	st_array_destroy(array);
+        st_array* array = st_array_get(&gs->components, i);
+        st_array_destroy(array);
     }
     st_array_destroy(&gs->components);
     st_array_destroy(&gs->tags);
@@ -52,11 +52,11 @@ st_gamestate_cleanup(st_gamestate* gs)
 
 int
 st_gamestate_register_component(st_gamestate* gs, size_t identifier,
-				size_t byte_size)
+                                size_t byte_size)
 {
     if(!gs) {
-	st_log_err("attempt operation on NULL reference to gamestate");
-	return 1;
+        st_log_err("attempt operation on NULL reference to gamestate");
+        return 1;
     }
     
     __st_add_new_component(gs->components, byte_size, identifier);
@@ -73,8 +73,8 @@ st_entity
 st_entity_new(st_gamestate* gs)
 {
     if(!gs) {
-	st_log_err("attempt operation on NULL reference to gamestate");
-	return 0;
+        st_log_err("attempt operation on NULL reference to gamestate");
+        return 0;
     }
     size_t new_index = gs->global_entity_count;
     gs->global_entity_count++;
@@ -90,8 +90,8 @@ st_entity_add_component(st_gamestate* gs, st_entity e, st_component_t type)
     // of bitwise flags.
     size_t* tags = st_array_get(&gs->tags, e - 1);
     if(!tags) {
-	st_log_err("unexisting entity");
-	return 1;
+        st_log_err("unexisting entity");
+        return 1;
     }
     
     *tags |= 1 << (size_t)type;
@@ -103,8 +103,8 @@ st_entity_has_component(st_gamestate* gs, st_entity e, st_component_t type)
 {
     size_t* tags = st_array_get(&gs->tags, e - 1);
     if(!tags) {
-	st_log_err("unexisting entity");
-	return 0;
+        st_log_err("unexisting entity");
+        return 0;
     }
     return ((*tags) & (1 << (size_t) type)) != 0;
 }
@@ -113,10 +113,10 @@ void*
 st_entity_get_component(st_gamestate* gs, st_entity e, st_component_t type)
 {
     st_array* component_array = (st_array*)st_array_get(&gs->components,
-							(size_t)type);
+                                                        (size_t)type);
     if(!component_array) {
-	st_log_err("unexisting component type");
-	return NULL;
+        st_log_err("unexisting component type");
+        return NULL;
     }
     
     return st_array_get(component_array, e - 1);
@@ -127,8 +127,8 @@ st_entity_alive(st_gamestate* gs, st_entity e)
 {
     int* dead = st_array_get(&gs->dead, e - 1);
     if(!dead) {
-	st_log_err("unexisting entity");
-	return 0;
+        st_log_err("unexisting entity");
+        return 0;
     }
     return !(*dead);
 }
@@ -138,8 +138,8 @@ st_entity_kill(st_gamestate* gs, st_entity* e)
 {
     int* dead = st_array_get(&gs->dead, (*e) - 1);
     if(!dead) {
-	st_log_err("unexisting entity");
-	return 1;
+        st_log_err("unexisting entity");
+        return 1;
     }
     *dead = 1;
     *e = 0;
