@@ -11,15 +11,23 @@ be interesting that subtopics are kept in descending order of importance or
 urgency.
 
 * Rendering
+- Use statically-linked GLFW, and OpenGL 3.3+.
+- 2D graphics should be the primary goal.
 
 * Math
+- Implement basic math. Correctness should come before optimization.
 
 * Entity System
+- Use preferred script language to interface with entities.
 
 * Audio
+- Preferably use OGG.
+- Use customizable looping sections.
+- Recover playback metadata from specialized scripts.
 
 * Asset Management
+- Scriptable asset loading, from scripting language.
 
 * Scripting
-- Find or create a reliable, lightweight scripting language based on Scheme. The
-  less the overhead and the library size, the better.
+- Use Janet language for scripting.
+

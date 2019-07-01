@@ -22,7 +22,7 @@ are contained in their specific headers. As the name suggests, this project is a
 
 * Implementation
 ** Windowing and Input
-Uses [[https://www.glfw.org/][GLFW]] for handling windowing and basic input support. The library is
+Uses [[https://www.glfw.org/][GLFW 3.3]] for handling windowing and basic input support. The library is
 statically compiled for better redistribution.
 
 ** Rendering
@@ -39,16 +39,17 @@ Uses [[https://libcheck.github.io/check/][libcheck]]. The tests can be found on 
 compiled on the binary =unit-tests=.
 
 ** Matrix and Vector operations
-Based upon the book "Real Time Collision Detection", by Christer Ericson.
+Uses a custom-tailored linear algebra system, based upon the book
+"Real Time Collision Detection", by Christer Ericson.
 
 *** Rendering-related operations
 Graphics operations based on the descriptions of [[https://open.gl/transformations][open.gl]] webpage.
 
 ** Entity Management
+Uses a custom-tailored entity component system.
 
-TBD.
 ** Scripting
-TBD.
+Use the [[https://janet-lang.org/][Janet language]] to script the application.
 
 * Compiling
 This project uses [[https://cmake.org/][CMake]], therefore it has no secrets in the compilation

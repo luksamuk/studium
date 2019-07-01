@@ -85,6 +85,25 @@ __st_array_grow_if_needed(st_array* array)
     return 0;
 }
 
+int
+st_array_put(st_array* array, size_t n, void* element)
+{
+    if(!array) {
+        st_log_err("attempt to perform operation on NULL reference to array");
+        return 1;
+    } else if(!element) {
+        st_log_err("cannot add a NULL element to array");
+        return 1;
+    }
+
+    // If our array is full, make it grow
+    if(__st_array_grow_if_needed(array))
+        return 1;
+
+    __st_array_put_at(array, n, element);
+    return 0;
+}
+
 /* int */
 /* st_array_add(st_array* array, size_t* out, void* element) */
 /* { */
@@ -116,21 +135,3 @@ st_array_get(st_array* array, size_t index)
     return (array->elements) + (index * array->element_size);
 }
 
-int
-st_array_put(st_array* array, size_t n, void* element)
-{
-    if(!array) {
-        st_log_err("attempt to perform operation on NULL reference to array");
-        return 1;
-    } else if(!element) {
-        st_log_err("cannot add a NULL element to array");
-        return 1;
-    }
-
-    // If our array is full, make it grow
-    if(__st_array_grow_if_needed(array))
-        return 1;
-
-    __st_array_put_at(array, n, element);
-    return 0;
-}

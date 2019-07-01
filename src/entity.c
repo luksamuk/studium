@@ -8,6 +8,7 @@
 #define __st_add_component_array(components, instance, n)       \
     st_array_put(&components, n, (void*)&instance)
 
+// This is OK because st_array_put memcpy's stuff.
 #define __st_add_new_component(components, size, c_type)                \
     {                                                                   \
         st_array component = st_array_new(size);                        \
