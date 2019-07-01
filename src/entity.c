@@ -23,7 +23,7 @@ st_gamestate_init()
     state.global_entity_count    = 1;
     state.global_component_count = 0;
     state.tags = st_array_new(sizeof(size_t));
-    state.tags = st_array_new(sizeof(int));
+    state.dead = st_array_new(sizeof(int));
     
     // "components" is an array of arrays
     state.components = st_array_new(sizeof(st_array));

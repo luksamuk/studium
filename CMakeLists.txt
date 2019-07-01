@@ -16,6 +16,8 @@ set(GLFW_BUILD_EXAMPLES OFF CACHE BOOL "" FORCE)
 add_subdirectory(glfw)
 include_directories(glfw/include)
 
+# System GLFW. Only advised for newer versions
+#find_package(glfw3 REQUIRED)
 
 
 ## Build configuration
