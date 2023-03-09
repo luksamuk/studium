@@ -1,4 +1,4 @@
-#version 150 core
+#version 150
 
 in vec4 position;
 in vec4 color;
@@ -16,3 +16,4 @@ main()
     Texcoord = texcoord;
     gl_Position = mvp * position;
 }
+

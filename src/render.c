@@ -38,9 +38,9 @@ st_texture_load(const char* filename)
     glBindTexture(GL_TEXTURE_2D, img.id);
 
     glTexParameterf(GL_TEXTURE_2D,
-                    GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_NEAREST);
+                    GL_TEXTURE_MIN_FILTER, GL_NEAREST);
     glTexParameterf(GL_TEXTURE_2D,
-                    GL_TEXTURE_MAG_FILTER, GL_LINEAR_MIPMAP_NEAREST);
+                    GL_TEXTURE_MAG_FILTER, GL_NEAREST);
     glTexParameterf(GL_TEXTURE_2D,
                     GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
     glTexParameterf(GL_TEXTURE_2D,
@@ -95,7 +95,7 @@ st_texture_render(st_texture* img, st_vec2 pos)
 
 /* Default shaders for general purpose */
 static const char* st_shadersrc_default_vs_gl =
-"#version 150 core\n"
+"#version 150\n"
 "\n"
 "// Expected\n"
 "in vec4 position;\n"
@@ -118,7 +118,7 @@ static const char* st_shadersrc_default_vs_gl =
 "}\n";
 
 static const char* st_shadersrc_default_fs_gl =
-"#version 150 core\n"
+"#version 150\n"
 "\n"
 "// Inherit from last pass\n"
 "in vec4 Color;\n"
